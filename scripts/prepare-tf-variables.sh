@@ -49,3 +49,14 @@ fi
 if [[ -n $AZURE_OPENAI_EMBEDDINGS_SKU ]]; then
     export TF_VAR_azureOpenAIEmbeddingsModelSku=$AZURE_OPENAI_EMBEDDINGS_SKU
 fi
+
+# Add section for bring your own vnet
+export TF_VAR_openai_region=$OPENAI_REGION
+export TF_VAR_bring_your_own_vnet=$BRING_YOUR_OWN_VNET
+export TF_VAR_vnet_name=$VNET_NAME
+export TF_VAR_web_subnet_name=$WEB_SUBNET_NAME
+export TF_VAR_web_subnet_integration_name=$WEB_SUBNET_INTEGRATION_NAME
+export TF_VAR_subnet_service_name=$SUBNET_SERVICE_NAME
+export TF_VAR_subnet_data=$SUBNET_DATA
+export TF_VAR_subnet_openai=$SUBNET_OPENAI
+export TF_VAR_create_private_dns_zone=$CREATE_PRIVATE_DNS_ZONE

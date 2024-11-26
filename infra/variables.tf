@@ -1,3 +1,51 @@
+// Bring your own vnet section
+variable "openai_region" {
+  description = "The region where the OpenAI service is deployed"
+  type        = string
+}
+
+variable "bring_your_own_vnet" {
+  description = "Flag to indicate if the user is bringing their own vnet"
+  type        = bool
+}
+
+variable "vnet_name" {
+  description = "Name of the vnet"
+  type        = string
+}
+
+variable "web_subnet_name" {
+  description = "Name of the subnet for the web app"
+  type        = string
+}
+
+variable "web_subnet_integration_name" {
+  description = "Name of the subnet for the web app integration"
+  type        = string
+}
+
+variable "subnet_service_name" {
+  description = "Name of the subnet for the supporting service"
+  type        = string
+}
+
+variable "subnet_data" {
+  description = "Name of the subnet for the data storage"
+  type        = string
+}
+
+variable "subnet_openai" {
+  description = "Name of the subnet for the AI service"
+  type        = string
+}
+
+variable "create_private_dns_zone" {
+  description = "Flag to indicate if the user wants to create a private DNS zone"
+  type        = bool
+}
+
+// End bring your own vnet section
+
 variable "environmentName" {
   description = "Name of the the environment which is used to generate a short unique hash used in all resources."
   type        = string
@@ -73,7 +121,7 @@ variable "azure_environment" {
 }
 
 variable "azure_websites_domain" {
-  type        = string
+  type = string
 }
 
 variable "azure_portal_domain" {
@@ -85,7 +133,7 @@ variable "azure_openai_domain" {
 }
 
 variable "azure_openai_authority_host" {
-  type = string  
+  type = string
 }
 
 variable "azure_arm_management_api" {
@@ -179,7 +227,7 @@ variable "aadMgmtClientSecret" {
 }
 
 variable "aadMgmtServicePrincipalId" {
-  type = string
+  type    = string
   default = ""
 }
 ////
@@ -198,7 +246,7 @@ variable "azureOpenAIResourceGroup" {
 }
 
 variable "openAIServiceName" {
-  type = string
+  type    = string
   default = ""
 }
 
@@ -220,7 +268,7 @@ variable "chatGptModelName" {
 variable "chatGptModelSkuName" {
   type    = string
   default = "Standard"
-  
+
 }
 
 variable "chatGptModelVersion" {
@@ -371,14 +419,14 @@ variable "openai_public_network_access_enabled" {
 }
 
 variable "kv_secret_expiration" {
-  type = string
+  type        = string
   description = "The value for key vault secret expiration in  seconds since 1970-01-01T00:00:00Z"
 }
 
 variable "enabledDDOSProtectionPlan" {
   type        = bool
   description = "This variable is used to enable or disable DDOS protection plan"
-  default = false
+  default     = false
 }
 ////
 
@@ -394,15 +442,15 @@ variable "appServicePlanName" {
 
 variable "appServiceSkuSize" {
   description = "The size of the app service plan for the IA website. Must match with the tier value in appServiceSkuTier."
-  type = string
-  default = "S1"
+  type        = string
+  default     = "S1"
 }
 
 variable "appServiceSkuTier" {
   description = "The tier of the app service plan for the IA website. Must match with the size value in appServiceSkuSize."
-  type = string
-  default = "Standard"
-  
+  type        = string
+  default     = "Standard"
+
 }
 
 variable "enrichmentAppServicePlanName" {
@@ -412,14 +460,14 @@ variable "enrichmentAppServicePlanName" {
 
 variable "enrichmentAppServiceSkuSize" {
   description = "The size of the app service plan for the enrichment service. Must match with the tier value in enrichmentAppServiceSkuTier."
-  type = string
-  default = "P2v3"
+  type        = string
+  default     = "P2v3"
 }
 
 variable "enrichmentAppServiceSkuTier" {
   description = "The tier of the app service plan for the enrichment service. Must match with the size value in enrichmentAppServiceSkuSize."
-  type = string
-  default = "PremiumV3"
+  type        = string
+  default     = "PremiumV3"
 }
 
 variable "logAnalyticsName" {
@@ -449,14 +497,14 @@ variable "functionsAppName" {
 
 variable "functionsAppSkuSize" {
   description = "The size of the app service plan for the functions app. Must match with the tier value in functionsAppSkuTier."
-  type = string
-  default = "S2"
+  type        = string
+  default     = "S2"
 }
 
 variable "functionsAppSkuTier" {
   description = "The tier of the app service plan for the functions app. Must match with the size value in functionsAppSkuSize."
-  type = string
-  default = "Standard"
+  type        = string
+  default     = "Standard"
 }
 
 variable "searchServicesName" {
@@ -615,7 +663,7 @@ variable "applicationtitle" {
 }
 
 variable "video_indexer_api_version" {
-  type = string
+  type    = string
   default = "2024-01-01"
 }
 
@@ -630,8 +678,8 @@ variable "maxCsvFileSize" {
 }
 
 variable "entraOwners" {
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
   description = "Comma-separated list of owner emails"
 }
 
@@ -641,7 +689,7 @@ variable "serviceManagementReference" {
 }
 
 variable "password_lifetime" {
-  type    = number
-  default = 365
-  description = "The number of days used as the lifetime for passwords"  
+  type        = number
+  default     = 365
+  description = "The number of days used as the lifetime for passwords"
 }

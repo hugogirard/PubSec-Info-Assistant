@@ -70,6 +70,41 @@ if [[ $ENABLE_WEB_CHAT == true ]] && [[ $AZURE_ENVIRONMENT == "AzureUSGovernment
     exit 1
 fi
 
+# Validate if you deploy in secure mode and bring your own vnet
+# next we validate all the subnet are provided
+if [[ $SECURE_MODE == true && $BRING_YOUR_OWN_VNET == true ]]; then
+    if [[ -z "$VNET_NAME" ]]; then
+        echo -e "\n"
+        echo -e "\e[31mVNET_NAME is not set. Please provide a value for VNET_NAME when SECURE_MODE and BRING_YOUR_OWN_VNET are enabled.\e[0m\n"
+        exit 1
+    fi
+    if [[ -z "$WEB_SUBNET_NAME" ]]; then
+        echo -e "\n"
+        echo -e "\e[31mWEB_SUBNET_NAME is not set. Please provide a value for WEB_SUBNET_NAME.\e[0m\n"
+        exit 1
+    fi
+    if [[ -z "$WEB_SUBNET_INTEGRATION_NAME" ]]; then
+        echo -e "\n"
+        echo -e "\e[31mWEB_SUBNET_INTEGRATION_NAME is not set. Please provide a value for WEB_SUBNET_INTEGRATION_NAME.\e[0m\n"
+        exit 1
+    fi
+    if [[ -z "$SUBNET_SERVICE_NAME" ]]; then
+        echo -e "\n"
+        echo -e "\e[31mSUBNET_SERVICE_NAME is not set. Please provide a value for SUBNET_SERVICE_NAME.\e[0m\n"
+        exit 1
+    fi
+    if [[ -z "$SUBNET_DATA" ]]; then
+        echo -e "\n"
+        echo -e "\e[31mSUBNET_DATA is not set. Please provide a value for SUBNET_DATA.\e[0m\n"
+        exit 1
+    fi
+    if [[ -z "$SUBNET_OPENAI" ]]; then
+        echo -e "\n"
+        echo -e "\e[31mSUBNET_OPENAI is not set. Please provide a value for SUBNET_OPENAI.\e[0m\n"
+        exit 1
+    fi
+fi
+
 if [[ $SECURE_MODE == true && $USE_EXISTING_AOAI == true ]]; then
     echo -e "\n"
     echo -e "\e[31mSecure Mode and Use Existing AOAI cannot be enabled at the same time. We do not want to alter the security of an existing AOAI instance to avoid disruption of other services dependent on the shared instance. Check your values for SECURE_MODE and USE_EXISTING_AOAI.\e[0m\n"
