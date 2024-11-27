@@ -32,12 +32,12 @@ resource "azurerm_private_endpoint" "docintPrivateEndpoint" {
     name                           = "cognitiveAccount"
     is_manual_connection           = false
     private_connection_resource_id = azurerm_cognitive_account.docIntelligenceAccount.id
-    subresource_names               = ["account"]
+    subresource_names              = ["account"]
   }
 
-  private_dns_zone_group {
-    name                 = "${var.name}PrivateDnsZoneGroup"
-    private_dns_zone_ids = var.private_dns_zone_ids
-    
-  }
+  # private_dns_zone_group {
+  #   name                 = "${var.name}PrivateDnsZoneGroup"
+  #   private_dns_zone_ids = var.private_dns_zone_ids
+
+  # }
 }

@@ -88,10 +88,10 @@ resource "azurerm_private_endpoint" "cosmosPrivateEndpoint" {
     private_connection_resource_id = azurerm_cosmosdb_account.cosmosdb_account.id
     is_manual_connection           = false
     subresource_names              = ["SQL"]
-    
+
   }
-  private_dns_zone_group {
-    name                 = "${var.name}PrivateDnsZoneGroup"
-    private_dns_zone_ids = var.private_dns_zone_ids
-  }
+  #   private_dns_zone_group {
+  #     name                 = "${var.name}PrivateDnsZoneGroup"
+  #     private_dns_zone_ids = var.private_dns_zone_ids
+  #   }
 }

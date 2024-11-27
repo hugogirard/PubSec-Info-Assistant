@@ -12,6 +12,7 @@ source "${DIR}/load-env.sh"
 source "${DIR}/prepare-tf-variables.sh"
 pushd "$DIR/../infra" > /dev/null
 
+
 # reset the current directory on exit using a trap so that the directory is reset even on error
 function finish {
   popd > /dev/null

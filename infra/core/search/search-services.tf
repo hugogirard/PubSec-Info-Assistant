@@ -9,7 +9,7 @@ resource "azurerm_search_service" "search" {
   local_authentication_enabled  = false
   replica_count                 = 1
   partition_count               = 1
-  semantic_search_sku           = var.semanticSearch 
+  semantic_search_sku           = var.semanticSearch
 
   identity {
     type = "SystemAssigned"
@@ -38,8 +38,8 @@ resource "azurerm_private_endpoint" "searchPrivateEndpoint" {
     subresource_names              = ["searchService"]
   }
 
-  private_dns_zone_group {
-    name                 = "${var.name}PrivateDnsZoneGroup"
-    private_dns_zone_ids = var.private_dns_zone_ids
-  }
+  # private_dns_zone_group {
+  #   name                 = "${var.name}PrivateDnsZoneGroup"
+  #   private_dns_zone_ids = var.private_dns_zone_ids
+  # }
 }

@@ -3,6 +3,10 @@ variable "name" {
   type        = string
 }
 
+# variable "createPrivateDnsZone" {
+#   type = bool
+# }
+
 variable "location" {
   description = "The location of the resource group"
   type        = string
@@ -39,7 +43,7 @@ variable "vnet_name" {
 }
 
 variable "subnet_name" {
-  type = string  
+  type = string
 }
 
 variable "subnet_id" {

@@ -9,26 +9,6 @@ variable "bring_your_own_vnet" {
   type        = bool
 }
 
-variable "privateDnsZoneResourceIdBlob" {
-  description = "The private DNS zone resource ID for the blob storage"
-  type        = string
-}
-
-variable "privateDnsZoneNameBlob" {
-  description = "The private DNS zone name for the blob storage"
-  type        = string
-}
-
-variable "nsgSubnetLoggingName" {
-  description = "Name of the NSG for the subnet logging"
-  type        = string
-}
-
-variable "nsgSubnetLoggingId" {
-  description = "ID of the NSG for the subnet logging"
-  type        = string
-}
-
 variable "vnet_name" {
   description = "Name of the vnet"
   type        = string
@@ -59,7 +39,7 @@ variable "subnet_openai" {
   type        = string
 }
 
-variable "createPrivateDnsZone" {
+variable "create_private_dns_zone" {
   description = "Flag to indicate if the user wants to create a private DNS zone"
   type        = bool
 }
