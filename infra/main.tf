@@ -67,30 +67,42 @@ module "logging" {
   nsg_name                     = var.nsgSubnetLoggingName
 }
 
-# module "storage" {
-#   source                       = "./core/storage"
-#   name                         = var.storageAccountName != "" ? var.storageAccountName : "infoasststore${random_string.random.result}"
-#   location                     = var.location
-#   tags                         = local.tags
-#   accessTier                   = "Hot"
-#   allowBlobPublicAccess        = false
-#   resourceGroupName            = var.resourceGroupName
-#   arm_template_schema_mgmt_api = var.arm_template_schema_mgmt_api
-#   key_vault_name               = module.kvModule.keyVaultName
-#   deleteRetentionPolicy = {
-#     days = 7
-#   }
-#   containers                      = ["content", "website", "upload", "function", "logs", "config"]
-#   queueNames                      = ["pdf-submit-queue", "pdf-polling-queue", "non-pdf-submit-queue", "media-submit-queue", "text-enrichment-queue", "image-enrichment-queue", "embeddings-queue"]
-#   is_secure_mode                  = true
-#   subnet_name                     = var.subnet_data
-#   vnet_name                       = var.vnet_name
-#   private_dns_zone_ids            = null
-#   network_rules_allowed_subnets   = var.is_secure_mode ? [module.network[0].snetIntegration_id, module.network[0].snetFunction_id] : null
-#   kv_secret_expiration            = var.kv_secret_expiration
-#   logAnalyticsWorkspaceResourceId = null
-#   #logAnalyticsWorkspaceResourceId = module.logging.logAnalyticsId
-# }
+data "azurerm_subnet" "integration_subnet" {
+  name                 = var.web_subnet_integration_name
+  virtual_network_name = data.azurerm_virtual_network.existing_vnet.name
+  resource_group_name  = var.resourceGroupName
+}
+
+data "azurerm_subnet" "web_subnet" {
+  name                 = var.web_subnet_name
+  virtual_network_name = data.azurerm_virtual_network.existing_vnet.name
+  resource_group_name  = var.resourceGroupName
+}
+
+module "storage" {
+  source                       = "./core/storage"
+  name                         = var.storageAccountName != "" ? var.storageAccountName : "infoasststore${random_string.random.result}"
+  location                     = var.location
+  tags                         = local.tags
+  accessTier                   = "Hot"
+  allowBlobPublicAccess        = false
+  resourceGroupName            = var.resourceGroupName
+  arm_template_schema_mgmt_api = var.arm_template_schema_mgmt_api
+  key_vault_name               = module.kvModule.keyVaultName
+  deleteRetentionPolicy = {
+    days = 7
+  }
+  containers                    = ["content", "website", "upload", "function", "logs", "config"]
+  queueNames                    = ["pdf-submit-queue", "pdf-polling-queue", "non-pdf-submit-queue", "media-submit-queue", "text-enrichment-queue", "image-enrichment-queue", "embeddings-queue"]
+  is_secure_mode                = true
+  subnet_name                   = var.subnet_data
+  vnet_name                     = var.vnet_name
+  private_dns_zone_ids          = null
+  network_rules_allowed_subnets = [data.azurerm_subnet.integration_subnet.id, data.azurerm_subnet.web_subnet.id]
+  kv_secret_expiration          = var.kv_secret_expiration
+  #logAnalyticsWorkspaceResourceId = null
+  logAnalyticsWorkspaceResourceId = module.logging.logAnalyticsId
+}
 
 data "azurerm_subnet" "kv_subnet" {
   name                 = var.subnet_service_name
@@ -144,11 +156,11 @@ module "kvModule" {
 #   container_registry_admin_username   = module.acr.admin_username
 #   container_registry_admin_password   = module.acr.admin_password
 #   container_registry_id               = module.acr.acr_id
-#   is_secure_mode                      = var.is_secure_mode
-#   subnetIntegration_id                = var.is_secure_mode ? module.network[0].snetIntegration_id : null
-#   subnet_name                         = var.is_secure_mode ? module.network[0].snetEnrichment_name : null
-#   vnet_name                           = var.is_secure_mode ? module.network[0].vnet_name : null
-#   private_dns_zone_ids                = var.is_secure_mode ? [module.privateDnsZoneApp[0].privateDnsZoneResourceId] : null
+#   is_secure_mode                      = true
+#   subnetIntegration_id                = data.azurerm_subnet.integration_subnet.id
+#   subnet_name                         = var.web_subnet_name
+#   vnet_name                           = var.vnet_name
+#   private_dns_zone_ids                = null
 #   azure_environment                   = var.azure_environment
 
 #   appSettings = {
@@ -341,51 +353,58 @@ module "kvModule" {
 #   azure_ai_credential_domain            = var.azure_ai_private_link_domain
 # }
 
-# module "openaiServices" {
-#   source                          = "./core/ai/openaiservices"
-#   name                            = var.openAIServiceName != "" ? var.openAIServiceName : "infoasst-aoai-${random_string.random.result}"
-#   location                        = var.location
-#   tags                            = local.tags
-#   resourceGroupName               = azurerm_resource_group.rg.name
-#   useExistingAOAIService          = var.useExistingAOAIService
-#   is_secure_mode                  = var.is_secure_mode
-#   subnet_name                     = var.is_secure_mode ? module.network[0].snetAzureOpenAI_name : null
-#   vnet_name                       = var.is_secure_mode ? module.network[0].vnet_name : null
-#   subnet_id                       = var.is_secure_mode ? module.network[0].snetAzureOpenAI_id : null
-#   private_dns_zone_ids            = var.is_secure_mode ? [module.privateDnsZoneAzureOpenAi[0].privateDnsZoneResourceId] : null
-#   arm_template_schema_mgmt_api    = var.arm_template_schema_mgmt_api
-#   key_vault_name                  = module.kvModule.keyVaultName
-#   logAnalyticsWorkspaceResourceId = module.logging.logAnalyticsId
+data "azurerm_subnet" "openai_subnet" {
+  name                 = var.subnet_openai
+  virtual_network_name = data.azurerm_virtual_network.existing_vnet.name
+  resource_group_name  = var.resourceGroupName
+}
 
-#   deployments = [
-#     {
-#       name = var.chatGptDeploymentName != "" ? var.chatGptDeploymentName : (var.chatGptModelName != "" ? var.chatGptModelName : "gpt-35-turbo-16k")
-#       model = {
-#         format  = "OpenAI"
-#         name    = var.chatGptModelName != "" ? var.chatGptModelName : "gpt-35-turbo-16k"
-#         version = var.chatGptModelVersion != "" ? var.chatGptModelVersion : "0613"
-#       }
-#       sku = {
-#         name     = var.chatGptModelSkuName
-#         capacity = var.chatGptDeploymentCapacity
-#       }
-#       rai_policy_name = "Microsoft.Default"
-#     },
-#     {
-#       name = var.azureOpenAIEmbeddingDeploymentName != "" ? var.azureOpenAIEmbeddingDeploymentName : "text-embedding-ada-002"
-#       model = {
-#         format  = "OpenAI"
-#         name    = var.azureOpenAIEmbeddingsModelName != "" ? var.azureOpenAIEmbeddingsModelName : "text-embedding-ada-002"
-#         version = "2"
-#       }
-#       sku = {
-#         name     = var.azureOpenAIEmbeddingsModelSku
-#         capacity = var.embeddingsDeploymentCapacity
-#       }
-#       rai_policy_name = "Microsoft.Default"
-#     }
-#   ]
-# }
+module "openaiServices" {
+  source                          = "./core/ai/openaiservices"
+  name                            = var.openAIServiceName != "" ? var.openAIServiceName : "infoasst-aoai-${random_string.random.result}"
+  location                        = var.openai_region
+  vnetLocation                    = var.location
+  tags                            = local.tags
+  resourceGroupName               = var.resourceGroupName
+  useExistingAOAIService          = false
+  is_secure_mode                  = true
+  subnet_name                     = var.subnet_openai
+  vnet_name                       = data.azurerm_virtual_network.existing_vnet.name
+  subnet_id                       = data.azurerm_subnet.openai_subnet.id
+  private_dns_zone_ids            = null
+  arm_template_schema_mgmt_api    = var.arm_template_schema_mgmt_api
+  key_vault_name                  = module.kvModule.keyVaultName
+  logAnalyticsWorkspaceResourceId = module.logging.logAnalyticsId
+
+  deployments = [
+    {
+      name = var.chatGptDeploymentName != "" ? var.chatGptDeploymentName : (var.chatGptModelName != "" ? var.chatGptModelName : "gpt-35-turbo-16k")
+      model = {
+        format  = "OpenAI"
+        name    = var.chatGptModelName != "" ? var.chatGptModelName : "gpt-35-turbo-16k"
+        version = var.chatGptModelVersion != "" ? var.chatGptModelVersion : "0613"
+      }
+      sku = {
+        name     = var.chatGptModelSkuName
+        capacity = var.chatGptDeploymentCapacity
+      }
+      rai_policy_name = "Microsoft.Default"
+    },
+    {
+      name = var.azureOpenAIEmbeddingDeploymentName != "" ? var.azureOpenAIEmbeddingDeploymentName : "text-embedding-ada-002"
+      model = {
+        format  = "OpenAI"
+        name    = var.azureOpenAIEmbeddingsModelName != "" ? var.azureOpenAIEmbeddingsModelName : "text-embedding-ada-002"
+        version = "2"
+      }
+      sku = {
+        name     = var.azureOpenAIEmbeddingsModelSku
+        capacity = var.embeddingsDeploymentCapacity
+      }
+      rai_policy_name = "Microsoft.Default"
+    }
+  ]
+}
 
 module "aiDocIntelligence" {
   source                       = "./core/ai/docintelligence"

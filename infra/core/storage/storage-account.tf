@@ -17,26 +17,26 @@ resource "azurerm_storage_account" "storage" {
   allow_nested_items_to_be_public = false
   shared_access_key_enabled       = true #var.is_secure_mode ? false : true # This will need to be enabled once the Azure Functions can support Entra ID auth
 
-  network_rules {  
-    default_action                = var.is_secure_mode ? "Deny" : "Allow"
-    bypass                        = ["AzureServices"]  
-    ip_rules                      = []  
-    virtual_network_subnet_ids    = var.is_secure_mode ? var.network_rules_allowed_subnets : []  
+  network_rules {
+    default_action             = var.is_secure_mode ? "Deny" : "Allow"
+    bypass                     = ["AzureServices"]
+    ip_rules                   = []
+    virtual_network_subnet_ids = var.is_secure_mode ? var.network_rules_allowed_subnets : []
   }
-  
-  blob_properties{
+
+  blob_properties {
     cors_rule {
-        allowed_headers = ["*"]
-        allowed_methods = ["GET", "PUT", "OPTIONS", "POST", "PATCH", "HEAD"]
-        allowed_origins = ["*"]
-        exposed_headers = ["*"]
-        max_age_in_seconds = 86400
+      allowed_headers    = ["*"]
+      allowed_methods    = ["GET", "PUT", "OPTIONS", "POST", "PATCH", "HEAD"]
+      allowed_origins    = ["*"]
+      exposed_headers    = ["*"]
+      max_age_in_seconds = 86400
     }
-      
+
     delete_retention_policy {
       days = 7
     }
-        
+
   }
 }
 
@@ -58,7 +58,7 @@ resource "azurerm_monitor_diagnostic_setting" "blob_diagnostic_logs" {
   name                       = "${azurerm_storage_account.storage.name}-blob"
   target_resource_id         = "${azurerm_storage_account.storage.id}/blobServices/default"
   log_analytics_workspace_id = var.logAnalyticsWorkspaceResourceId
-  enabled_log  {
+  enabled_log {
     category = "StorageRead"
   }
   enabled_log {
@@ -81,7 +81,7 @@ resource "azurerm_monitor_diagnostic_setting" "file_diagnostic_logs" {
   name                       = "${azurerm_storage_account.storage.name}-file"
   target_resource_id         = "${azurerm_storage_account.storage.id}/fileServices/default"
   log_analytics_workspace_id = var.logAnalyticsWorkspaceResourceId
-  enabled_log  {
+  enabled_log {
     category = "StorageRead"
   }
   enabled_log {
@@ -100,7 +100,7 @@ resource "azurerm_monitor_diagnostic_setting" "queue_diagnostic_logs" {
   name                       = "${azurerm_storage_account.storage.name}-queue"
   target_resource_id         = "${azurerm_storage_account.storage.id}/queueServices/default"
   log_analytics_workspace_id = var.logAnalyticsWorkspaceResourceId
-  enabled_log  {
+  enabled_log {
     category = "StorageRead"
   }
   enabled_log {
@@ -119,7 +119,7 @@ resource "azurerm_monitor_diagnostic_setting" "table_diagnostic_logs" {
   name                       = "${azurerm_storage_account.storage.name}-table"
   target_resource_id         = "${azurerm_storage_account.storage.id}/tableServices/default"
   log_analytics_workspace_id = var.logAnalyticsWorkspaceResourceId
-  enabled_log  {
+  enabled_log {
     category = "StorageRead"
   }
   enabled_log {
@@ -153,9 +153,9 @@ resource "azurerm_resource_group_template_deployment" "container" {
   count               = length(var.containers)
   resource_group_name = var.resourceGroupName
   parameters_content = jsonencode({
-    "storageAccountName" = { value = "${azurerm_storage_account.storage.name}" },
-    "location"           = { value = var.location },
-    "containerName"      = { value = var.containers[count.index] }
+    "storageAccountName"  = { value = "${azurerm_storage_account.storage.name}" },
+    "location"            = { value = var.location },
+    "containerName"       = { value = var.containers[count.index] }
     "publicNetworkAccess" = { value = var.is_secure_mode ? "Disabled" : "Enabled" }
   })
   template_content = data.template_file.container.template
@@ -171,9 +171,9 @@ resource "azurerm_resource_group_template_deployment" "queue" {
   count               = length(var.queueNames)
   resource_group_name = var.resourceGroupName
   parameters_content = jsonencode({
-    "storageAccountName" = { value = "${azurerm_storage_account.storage.name}" },
-    "location"           = { value = var.location },
-    "queueName"          = { value = var.queueNames[count.index] }
+    "storageAccountName"  = { value = "${azurerm_storage_account.storage.name}" },
+    "location"            = { value = var.location },
+    "queueName"           = { value = var.queueNames[count.index] }
     "publicNetworkAccess" = { value = var.is_secure_mode ? "Disabled" : "Enabled" }
   })
   template_content = data.template_file.queue.template
@@ -184,16 +184,16 @@ resource "azurerm_resource_group_template_deployment" "queue" {
 }
 
 module "storage_connection_string" {
-  source                        = "../security/keyvaultSecret"
-  resourceGroupName             = var.resourceGroupName
-  arm_template_schema_mgmt_api  = var.arm_template_schema_mgmt_api
-  key_vault_name                = var.key_vault_name
-  secret_name                   = "AZURE-STORAGE-CONNECTION-STRING"
-  secret_value                  = azurerm_storage_account.storage.primary_connection_string
-  tags                          = var.tags
-  alias                         = "blobconnstring"
-  kv_secret_expiration          = var.kv_secret_expiration
-  contentType                   = "application/vnd.ms-StorageConnectionString"
+  source                       = "../security/keyvaultSecret"
+  resourceGroupName            = var.resourceGroupName
+  arm_template_schema_mgmt_api = var.arm_template_schema_mgmt_api
+  key_vault_name               = var.key_vault_name
+  secret_name                  = "AZURE-STORAGE-CONNECTION-STRING"
+  secret_value                 = azurerm_storage_account.storage.primary_connection_string
+  tags                         = var.tags
+  alias                        = "blobconnstring"
+  kv_secret_expiration         = var.kv_secret_expiration
+  contentType                  = "application/vnd.ms-StorageConnectionString"
 }
 
 data "azurerm_subnet" "subnet" {
@@ -219,10 +219,10 @@ resource "azurerm_private_endpoint" "blobPrivateEndpoint" {
     subresource_names              = ["blob"]
   }
 
-  private_dns_zone_group {
-    name                 = "${var.name}PrivateDnsZoneGroup"
-    private_dns_zone_ids = var.private_dns_zone_ids
-  }
+  # private_dns_zone_group {
+  #   name                 = "${var.name}PrivateDnsZoneGroup"
+  #   private_dns_zone_ids = var.private_dns_zone_ids
+  # }
 }
 
 // Create a private endpoint for blob storage account
@@ -241,10 +241,10 @@ resource "azurerm_private_endpoint" "filePrivateEndpoint" {
     subresource_names              = ["file"]
   }
 
-  private_dns_zone_group {
-    name                 = "${var.name}PrivateDnsZoneGroup"
-    private_dns_zone_ids = var.private_dns_zone_ids
-  }
+  # private_dns_zone_group {
+  #   name                 = "${var.name}PrivateDnsZoneGroup"
+  #   private_dns_zone_ids = var.private_dns_zone_ids
+  # }
 }
 
 
@@ -264,10 +264,10 @@ resource "azurerm_private_endpoint" "tablePrivateEndpoint" {
     subresource_names              = ["table"]
   }
 
-  private_dns_zone_group {
-    name                 = "${var.name}PrivateDnsZoneGroup"
-    private_dns_zone_ids = var.private_dns_zone_ids
-  }
+  # private_dns_zone_group {
+  #   name                 = "${var.name}PrivateDnsZoneGroup"
+  #   private_dns_zone_ids = var.private_dns_zone_ids
+  # }
 }
 
 // Create a private endpoint for queue storage account
@@ -286,15 +286,15 @@ resource "azurerm_private_endpoint" "queuePrivateEndpoint" {
     subresource_names              = ["queue"]
   }
 
-  private_dns_zone_group {
-    name                 = "${var.name}PrivateDnsZoneGroup"
-    private_dns_zone_ids = var.private_dns_zone_ids
-  }
+  # private_dns_zone_group {
+  #   name                 = "${var.name}PrivateDnsZoneGroup"
+  #   private_dns_zone_ids = var.private_dns_zone_ids
+  # }
 }
 
 // Only create the config blob if we are not in secure mode as SharePoint integration is not supported in secure mode
 resource "azurerm_storage_blob" "config" {
-  depends_on = [ azurerm_resource_group_template_deployment.container ]
+  depends_on             = [azurerm_resource_group_template_deployment.container]
   count                  = var.is_secure_mode ? 0 : 1
   name                   = "config.json"
   storage_account_name   = azurerm_storage_account.storage.name
