@@ -19,6 +19,25 @@ resource "azurerm_application_insights" "applicationInsights" {
 
 // Create Diagnostic Setting for NSG here since the log analytics workspace is created here after the network is created
 // Add this manually
+
+data "azurerm_network_security_group" "existing_nsg" {
+  name                = var.nsg_name
+  resource_group_name = var.resourceGroupName
+}
+
+resource "azurerm_monitor_diagnostic_setting" "nsg_diagnostic_logs" {
+  count                      = var.is_secure_mode ? 1 : 0
+  name                       = "${data.azurerm_network_security_group.existing_nsg.name}-diagnostic"
+  target_resource_id         = data.azurerm_network_security_group.existing_nsg.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.logAnalytics.id
+  enabled_log {
+    category = "NetworkSecurityGroupEvent"
+  }
+  enabled_log {
+    category = "NetworkSecurityGroupRuleCounter"
+  }
+}
+
 # resource "azurerm_monitor_diagnostic_setting" "nsg_diagnostic_logs" {
 #   count                      = var.is_secure_mode ? 1 : 0
 #   name                       = var.nsg_name
@@ -40,23 +59,23 @@ resource "azurerm_monitor_private_link_scope" "ampls" {
 }
 
 // add scoped resource for Log Analytics Workspace
-# resource "azurerm_monitor_private_link_scoped_service" "ampl-ss_log_analytics" {
-#   count               = var.is_secure_mode ? 1 : 0
-#   name                = "${var.privateLinkScopeName}-law-connection"
-#   resource_group_name = var.resourceGroupName
-#   scope_name          = azurerm_monitor_private_link_scope.ampls[0].name
-#   linked_resource_id  = azurerm_log_analytics_workspace.logAnalytics.id
-# }
+resource "azurerm_monitor_private_link_scoped_service" "ampl-ss_log_analytics" {
+  count               = var.is_secure_mode ? 1 : 0
+  name                = "${var.privateLinkScopeName}-law-connection"
+  resource_group_name = var.resourceGroupName
+  scope_name          = azurerm_monitor_private_link_scope.ampls[0].name
+  linked_resource_id  = azurerm_log_analytics_workspace.logAnalytics.id
+}
 
 
 # // add scope resoruce for app insights
-# resource "azurerm_monitor_private_link_scoped_service" "ampl_ss_app_insights" {
-#   count               = var.is_secure_mode ? 1 : 0
-#   name                = "${var.privateLinkScopeName}-appInsights-connection"
-#   resource_group_name = var.resourceGroupName
-#   scope_name          = azurerm_monitor_private_link_scope.ampls[0].name
-#   linked_resource_id  = azurerm_application_insights.applicationInsights.id
-# }
+resource "azurerm_monitor_private_link_scoped_service" "ampl_ss_app_insights" {
+  count               = var.is_secure_mode ? 1 : 0
+  name                = "${var.privateLinkScopeName}-appInsights-connection"
+  resource_group_name = var.resourceGroupName
+  scope_name          = azurerm_monitor_private_link_scope.ampls[0].name
+  linked_resource_id  = azurerm_application_insights.applicationInsights.id
+}
 
 data "azurerm_subnet" "subnet" {
   count                = var.is_secure_mode ? 1 : 0

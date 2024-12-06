@@ -1,14 +1,14 @@
 // Create Enrichment App Service Plan 
 resource "azurerm_service_plan" "appServicePlan" {
-  name                          = var.plan_name
-  location                      = var.location
-  resource_group_name           = var.resourceGroupName
-  sku_name                      = var.sku["size"]
-  worker_count                  = var.sku["capacity"]
-  os_type                       = "Linux"
-  tags                          = var.tags
-  per_site_scaling_enabled      = false
-  zone_balancing_enabled        = false
+  name                     = var.plan_name
+  location                 = var.location
+  resource_group_name      = var.resourceGroupName
+  sku_name                 = var.sku["size"]
+  worker_count             = var.sku["capacity"]
+  os_type                  = "Linux"
+  tags                     = var.tags
+  per_site_scaling_enabled = false
+  zone_balancing_enabled   = false
 }
 
 resource "azurerm_monitor_autoscale_setting" "scaleout" {
@@ -27,14 +27,14 @@ resource "azurerm_monitor_autoscale_setting" "scaleout" {
 
     rule {
       metric_trigger {
-        metric_name         = "CpuPercentage"
-        metric_resource_id  = azurerm_service_plan.appServicePlan.id
-        time_grain          = "PT1M"
-        statistic           = "Average"
-        time_window         = "PT5M"
-        time_aggregation    = "Average"
-        operator            = "GreaterThan"
-        threshold           = 60
+        metric_name        = "CpuPercentage"
+        metric_resource_id = azurerm_service_plan.appServicePlan.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "GreaterThan"
+        threshold          = 60
       }
 
       scale_action {
@@ -47,14 +47,14 @@ resource "azurerm_monitor_autoscale_setting" "scaleout" {
 
     rule {
       metric_trigger {
-        metric_name         = "CpuPercentage"
-        metric_resource_id  = azurerm_service_plan.appServicePlan.id
-        time_grain          = "PT1M"
-        statistic           = "Average"
-        time_window         = "PT10M"
-        time_aggregation    = "Average"
-        operator            = "LessThan"
-        threshold           = 20
+        metric_name        = "CpuPercentage"
+        metric_resource_id = azurerm_service_plan.appServicePlan.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT10M"
+        time_aggregation   = "Average"
+        operator           = "LessThan"
+        threshold          = 20
       }
 
       scale_action {
@@ -69,47 +69,47 @@ resource "azurerm_monitor_autoscale_setting" "scaleout" {
 
 # Create the Enrichment App Service
 resource "azurerm_linux_web_app" "enrichmentapp" {
-  name                                            = var.name
-  location                                        = var.location
-  resource_group_name                             = var.resourceGroupName
-  service_plan_id                                 = azurerm_service_plan.appServicePlan.id
-  https_only                                      = true
-  tags                                            = var.tags
-  webdeploy_publish_basic_authentication_enabled  = false
-  client_affinity_enabled                         = false
-  enabled                                         = true
-  public_network_access_enabled                   = var.is_secure_mode ? false : true
-  virtual_network_subnet_id                       = var.is_secure_mode ? var.subnetIntegration_id : null
+  name                                           = var.name
+  location                                       = var.location
+  resource_group_name                            = var.resourceGroupName
+  service_plan_id                                = azurerm_service_plan.appServicePlan.id
+  https_only                                     = true
+  tags                                           = var.tags
+  webdeploy_publish_basic_authentication_enabled = false
+  client_affinity_enabled                        = false
+  enabled                                        = true
+  public_network_access_enabled                  = var.is_secure_mode ? false : true
+  virtual_network_subnet_id                      = var.is_secure_mode ? var.subnetIntegration_id : null
   site_config {
-    always_on                                     = var.alwaysOn
-    app_command_line                              = var.appCommandLine
-    ftps_state                                    = var.ftpsState
-    health_check_path                             = var.healthCheckPath
-    health_check_eviction_time_in_min             = 10
-    http2_enabled                                 = true
-    use_32_bit_worker                             = false
-    worker_count                                  = 1
-    container_registry_use_managed_identity       = true
+    always_on                               = var.alwaysOn
+    app_command_line                        = var.appCommandLine
+    ftps_state                              = var.ftpsState
+    health_check_path                       = var.healthCheckPath
+    health_check_eviction_time_in_min       = 10
+    http2_enabled                           = true
+    use_32_bit_worker                       = false
+    worker_count                            = 1
+    container_registry_use_managed_identity = true
 
     application_stack {
-      docker_image_name         = "${var.container_registry}/enrichmentapp:latest"
-      docker_registry_url       = "https://${var.container_registry}"
-      docker_registry_username  = var.container_registry_admin_username
-      docker_registry_password  = var.container_registry_admin_password
+      docker_image_name        = "${var.container_registry}/enrichmentapp:latest"
+      docker_registry_url      = "https://${var.container_registry}"
+      docker_registry_username = var.container_registry_admin_username
+      docker_registry_password = var.container_registry_admin_password
     }
   }
 
   app_settings = merge(
     var.appSettings,
     {
-      "SCM_DO_BUILD_DURING_DEPLOYMENT"            = lower(tostring(var.scmDoBuildDuringDeployment))
-      "ENABLE_ORYX_BUILD"                         = tostring(var.enableOryxBuild)
-      "APPLICATIONINSIGHTS_CONNECTION_STRING"     = var.applicationInsightsConnectionString
-      "KEY_EXPIRATION_DATE"                       = timeadd(timestamp(), "4320h") # Added expiration date setting for keys
-      "WEBSITE_PULL_IMAGE_OVER_VNET"              = var.is_secure_mode ? "true" : "false"
-      "WEBSITES_PORT"                             = "6000"
-      "WEBSITES_CONTAINER_START_TIME_LIMIT"       = "1600"
-      "WEBSITES_ENABLE_APP_SERVICE_STORAGE"       = "false"
+      "SCM_DO_BUILD_DURING_DEPLOYMENT"        = lower(tostring(var.scmDoBuildDuringDeployment))
+      "ENABLE_ORYX_BUILD"                     = tostring(var.enableOryxBuild)
+      "APPLICATIONINSIGHTS_CONNECTION_STRING" = var.applicationInsightsConnectionString
+      "KEY_EXPIRATION_DATE"                   = timeadd(timestamp(), "4320h") # Added expiration date setting for keys
+      "WEBSITE_PULL_IMAGE_OVER_VNET"          = var.is_secure_mode ? "true" : "false"
+      "WEBSITES_PORT"                         = "6000"
+      "WEBSITES_CONTAINER_START_TIME_LIMIT"   = "1600"
+      "WEBSITES_ENABLE_APP_SERVICE_STORAGE"   = "false"
     }
   )
 
@@ -144,7 +144,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_logs_commercial" {
   target_resource_id         = azurerm_linux_web_app.enrichmentapp.id
   log_analytics_workspace_id = var.logAnalyticsWorkspaceResourceId
 
-  enabled_log  {
+  enabled_log {
     category = "AppServiceAppLogs"
   }
 
@@ -155,7 +155,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_logs_commercial" {
   enabled_log {
     category = "AppServiceConsoleLogs"
   }
-  
+
   enabled_log {
     category = "AppServiceIPSecAuditLogs"
   }
@@ -184,7 +184,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_logs_usgov" {
   target_resource_id         = azurerm_linux_web_app.enrichmentapp.id
   log_analytics_workspace_id = var.logAnalyticsWorkspaceResourceId
 
-  enabled_log  {
+  enabled_log {
     category = "AppServiceAppLogs"
   }
 
@@ -195,7 +195,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_logs_usgov" {
   enabled_log {
     category = "AppServiceConsoleLogs"
   }
-  
+
   enabled_log {
     category = "AppServiceIPSecAuditLogs"
   }
@@ -233,16 +233,16 @@ resource "azurerm_private_endpoint" "privateEnrichmentEndpoint" {
   subnet_id                     = data.azurerm_subnet.subnet[0].id
   custom_network_interface_name = "infoasstenrichnic"
 
-  private_dns_zone_group {
-    name = "privatednszonegroup"
-    private_dns_zone_ids = var.private_dns_zone_ids
-  }
+  # private_dns_zone_group {
+  #   name = "privatednszonegroup"
+  #   private_dns_zone_ids = var.private_dns_zone_ids
+  # }
 
   private_service_connection {
-    name = "enrichementprivateendpointconnection"
+    name                           = "enrichementprivateendpointconnection"
     private_connection_resource_id = azurerm_linux_web_app.enrichmentapp.id
-    subresource_names = ["sites"]
-    is_manual_connection = false
+    subresource_names              = ["sites"]
+    is_manual_connection           = false
   }
 }
 

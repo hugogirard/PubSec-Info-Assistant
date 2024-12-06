@@ -4,9 +4,9 @@ resource "azurerm_service_plan" "appServicePlan" {
   location            = var.location
   resource_group_name = var.resourceGroupName
 
-  sku_name = var.sku["size"]
+  sku_name     = var.sku["size"]
   worker_count = var.sku["capacity"]
-  os_type = "Linux"
+  os_type      = "Linux"
 
   tags = var.tags
 }
@@ -27,14 +27,14 @@ resource "azurerm_monitor_autoscale_setting" "scaleout" {
 
     rule {
       metric_trigger {
-        metric_name         = "CpuPercentage"
-        metric_resource_id  = azurerm_service_plan.appServicePlan.id
-        time_grain          = "PT1M"
-        statistic           = "Average"
-        time_window         = "PT5M"
-        time_aggregation    = "Average"
-        operator            = "GreaterThan"
-        threshold           = 60
+        metric_name        = "CpuPercentage"
+        metric_resource_id = azurerm_service_plan.appServicePlan.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "GreaterThan"
+        threshold          = 60
       }
 
       scale_action {
@@ -47,14 +47,14 @@ resource "azurerm_monitor_autoscale_setting" "scaleout" {
 
     rule {
       metric_trigger {
-        metric_name         = "CpuPercentage"
-        metric_resource_id  = azurerm_service_plan.appServicePlan.id
-        time_grain          = "PT1M"
-        statistic           = "Average"
-        time_window         = "PT10M"
-        time_aggregation    = "Average"
-        operator            = "LessThan"
-        threshold           = 20
+        metric_name        = "CpuPercentage"
+        metric_resource_id = azurerm_service_plan.appServicePlan.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT10M"
+        time_aggregation   = "Average"
+        operator           = "LessThan"
+        threshold          = 20
       }
 
       scale_action {
@@ -75,22 +75,22 @@ resource "azurerm_role_assignment" "acr_pull_role" {
 
 # Create the web app
 resource "azurerm_linux_web_app" "app_service" {
-  name                                = var.name
-  location                            = var.location
-  resource_group_name                 = var.resourceGroupName
-  service_plan_id                     = azurerm_service_plan.appServicePlan.id
-  https_only                          = true
-  tags                                = var.tags
+  name                                           = var.name
+  location                                       = var.location
+  resource_group_name                            = var.resourceGroupName
+  service_plan_id                                = azurerm_service_plan.appServicePlan.id
+  https_only                                     = true
+  tags                                           = var.tags
   webdeploy_publish_basic_authentication_enabled = false
-  public_network_access_enabled                   = true
-  virtual_network_subnet_id                       = var.is_secure_mode ? var.snetIntegration_id : null
-  
+  public_network_access_enabled                  = true
+  virtual_network_subnet_id                      = var.is_secure_mode ? var.snetIntegration_id : null
+
   site_config {
     application_stack {
-      docker_image_name         = "${var.container_registry}/webapp:latest"
-      docker_registry_url       = "https://${var.container_registry}"
-      docker_registry_username  = var.container_registry_admin_username
-      docker_registry_password  = var.container_registry_admin_password
+      docker_image_name        = "${var.container_registry}/webapp:latest"
+      docker_registry_url      = "https://${var.container_registry}"
+      docker_registry_username = var.container_registry_admin_username
+      docker_registry_password = var.container_registry_admin_password
     }
     container_registry_use_managed_identity = true
     always_on                               = var.alwaysOn
@@ -108,18 +108,18 @@ resource "azurerm_linux_web_app" "app_service" {
   identity {
     type = var.managedIdentity ? "SystemAssigned" : "None"
   }
-  
+
   app_settings = merge(
     var.appSettings,
     {
-      "SCM_DO_BUILD_DURING_DEPLOYMENT"            = lower(tostring(var.scmDoBuildDuringDeployment))
-      "ENABLE_ORYX_BUILD"                         = lower(tostring(var.enableOryxBuild))
-      "APPLICATIONINSIGHTS_CONNECTION_STRING"     = var.applicationInsightsConnectionString
-      "BING_SEARCH_KEY"                           = "@Microsoft.KeyVault(SecretUri=${var.keyVaultUri}secrets/BINGSEARCH-KEY)"
-      "WEBSITE_PULL_IMAGE_OVER_VNET"              = var.is_secure_mode ? "true" : "false"
-      "WEBSITES_PORT"                             = "6000"
-      "WEBSITES_CONTAINER_START_TIME_LIMIT"       = "1600"
-      "WEBSITES_ENABLE_APP_SERVICE_STORAGE"       = "false"
+      "SCM_DO_BUILD_DURING_DEPLOYMENT"        = lower(tostring(var.scmDoBuildDuringDeployment))
+      "ENABLE_ORYX_BUILD"                     = lower(tostring(var.enableOryxBuild))
+      "APPLICATIONINSIGHTS_CONNECTION_STRING" = var.applicationInsightsConnectionString
+      "BING_SEARCH_KEY"                       = "@Microsoft.KeyVault(SecretUri=${var.keyVaultUri}secrets/BINGSEARCH-KEY)"
+      "WEBSITE_PULL_IMAGE_OVER_VNET"          = var.is_secure_mode ? "true" : "false"
+      "WEBSITES_PORT"                         = "6000"
+      "WEBSITES_CONTAINER_START_TIME_LIMIT"   = "1600"
+      "WEBSITES_ENABLE_APP_SERVICE_STORAGE"   = "false"
     }
   )
 
@@ -137,21 +137,21 @@ resource "azurerm_linux_web_app" "app_service" {
   }
 
   auth_settings_v2 {
-    auth_enabled = true
-    default_provider = "azureactivedirectory"
-    runtime_version = "~2"
+    auth_enabled           = true
+    default_provider       = "azureactivedirectory"
+    runtime_version        = "~2"
     unauthenticated_action = "RedirectToLoginPage"
-    require_https = true
-    active_directory_v2{
-      client_id = var.aadClientId
-      login_parameters = {}
-      tenant_auth_endpoint = "https://sts.windows.net/${var.tenantId}/v2.0"
-      www_authentication_disabled  = false
+    require_https          = true
+    active_directory_v2 {
+      client_id                   = var.aadClientId
+      login_parameters            = {}
+      tenant_auth_endpoint        = "https://sts.windows.net/${var.tenantId}/v2.0"
+      www_authentication_disabled = false
       allowed_audiences = [
         "api://${var.name}"
       ]
     }
-    login{
+    login {
       token_store_enabled = false
     }
   }
@@ -162,7 +162,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_logs_commercial" {
   name                       = azurerm_linux_web_app.app_service.name
   target_resource_id         = azurerm_linux_web_app.app_service.id
   log_analytics_workspace_id = var.logAnalyticsWorkspaceResourceId
-  enabled_log  {
+  enabled_log {
     category = "AppServiceAppLogs"
   }
   enabled_log {
@@ -195,7 +195,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_logs_usgov" {
   target_resource_id         = azurerm_linux_web_app.app_service.id
   log_analytics_workspace_id = var.logAnalyticsWorkspaceResourceId
 
-  enabled_log  {
+  enabled_log {
     category = "AppServiceAppLogs"
   }
 
@@ -206,7 +206,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_logs_usgov" {
   enabled_log {
     category = "AppServiceConsoleLogs"
   }
-  
+
   enabled_log {
     category = "AppServiceIPSecAuditLogs"
   }
@@ -266,11 +266,11 @@ resource "azurerm_private_endpoint" "backendPrivateEndpoint" {
     name                           = "${var.name}-private-link-service-connection"
     private_connection_resource_id = azurerm_linux_web_app.app_service.id
     is_manual_connection           = false
-    subresource_names               = ["sites"]
+    subresource_names              = ["sites"]
   }
 
-  private_dns_zone_group {
-    name                 = "${var.name}PrivateDnsZoneGroup"
-    private_dns_zone_ids = var.private_dns_zone_ids
-  }
+  # private_dns_zone_group {
+  #   name                 = "${var.name}PrivateDnsZoneGroup"
+  #   private_dns_zone_ids = var.private_dns_zone_ids
+  # }
 }
