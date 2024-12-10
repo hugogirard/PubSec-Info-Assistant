@@ -38,6 +38,21 @@ data "azurerm_virtual_network" "existing_vnet" {
   resource_group_name = var.resourceGroupName
 }
 
+data "azurerm_subnet" "service_subnet" {
+  name                 = var.dns_subnet_name
+  virtual_network_name = data.azurerm_virtual_network.existing_vnet.name
+  resource_group_name  = var.resourceGroupName
+}
+
+module "dnsResolver" {
+  source                  = "./core/network/privateDNSResolver"
+  privateDNSResolverName  = "infoasst-dns-${random_string.random.result}"
+  location                = var.location
+  resourceGroupName       = var.resourceGroupName
+  vnetId                  = data.azurerm_virtual_network.existing_vnet.id
+  subnetId                = data.azurerm_subnet.service_subnet.id
+}
+
 module "logging" {
   source                       = "./core/logging/loganalytics"
   logAnalyticsName             = var.logAnalyticsName != "" ? var.logAnalyticsName : "infoasst-la-${random_string.random.result}"

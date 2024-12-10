@@ -34,6 +34,11 @@ variable "vnet_name" {
   type        = string
 }
 
+variable "dns_subnet_name" {
+  description = "Name of the subnet for the DNS Resolver"
+  type        = string
+}
+
 variable "web_subnet_name" {
   description = "Name of the subnet for the web app"
   type        = string

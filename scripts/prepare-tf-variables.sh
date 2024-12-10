@@ -59,6 +59,7 @@ export TF_VAR_web_subnet_integration_name=$WEB_SUBNET_INTEGRATION_NAME
 export TF_VAR_subnet_service_name=$SUBNET_SERVICE_NAME
 export TF_VAR_subnet_data=$SUBNET_DATA
 export TF_VAR_subnet_openai=$SUBNET_OPENAI
+export TF_VAR_dns_subnet_name=$DNS_SUBNET_NAME
 
 # If we bring our own spoke vnet, we need to set the resource group
 if [[ -n $BRING_YOUR_OWN_VNET ]]; then
@@ -67,5 +68,5 @@ if [[ -n $BRING_YOUR_OWN_VNET ]]; then
     export TF_VAR_privateDnsZoneResourceIdBlob=$PRIVATE_ZONE_BLOB_RESOURCE_ID
     export TF_VAR_privateDnsZoneNameBlob=$PRIVATE_ZONE_BLOB_NAME
     export TF_VAR_nsgSubnetLoggingName=$NSG_SUBNET_LOGGING_NAME
-    export TF_VAR_nsgSubnetLoggingId=$NSG_SUBNET_LOGGING_ID
+    export TF_VAR_nsgSubnetLoggingId=$NSG_SUBNET_LOGGING_ID    
 fi
