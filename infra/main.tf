@@ -45,12 +45,12 @@ data "azurerm_subnet" "service_subnet" {
 }
 
 module "dnsResolver" {
-  source                  = "./core/network/privateDNSResolver"
-  privateDNSResolverName  = "infoasst-dns-${random_string.random.result}"
-  location                = var.location
-  resourceGroupName       = var.resourceGroupName
-  vnetId                  = data.azurerm_virtual_network.existing_vnet.id
-  subnetId                = data.azurerm_subnet.service_subnet.id
+  source                 = "./core/network/privateDNSResolver"
+  privateDNSResolverName = "infoasst-dns-${random_string.random.result}"
+  location               = var.location
+  resourceGroupName      = var.resourceGroupName
+  vnetId                 = data.azurerm_virtual_network.existing_vnet.id
+  subnetId               = data.azurerm_subnet.service_subnet.id
 }
 
 module "logging" {

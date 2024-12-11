@@ -68,7 +68,7 @@ resource "azurerm_monitor_private_link_scoped_service" "ampl-ss_log_analytics" {
 }
 
 
-# // add scope resoruce for app insights
+// add scope resoruce for app insights
 # resource "azurerm_monitor_private_link_scoped_service" "ampl_ss_app_insights" {
 #   count               = var.is_secure_mode ? 1 : 0
 #   name                = "${var.privateLinkScopeName}-appInsights-connection"
