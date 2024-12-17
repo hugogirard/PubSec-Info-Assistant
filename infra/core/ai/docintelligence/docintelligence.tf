@@ -24,7 +24,7 @@ resource "azurerm_private_endpoint" "docintPrivateEndpoint" {
   count                         = var.is_secure_mode ? 1 : 0
   name                          = "${var.name}-private-endpoint"
   location                      = var.location
-  resource_group_name           = var.resourceGroupName
+  resource_group_name           = var.resourceGroupVNET
   subnet_id                     = data.azurerm_subnet.subnet[0].id
   custom_network_interface_name = "infoasstdocintelnic"
 

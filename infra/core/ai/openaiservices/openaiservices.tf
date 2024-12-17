@@ -68,7 +68,7 @@ data "azurerm_subnet" "subnet" {
 resource "azurerm_private_endpoint" "openaiPrivateEndpoint" {
   name                          = "${var.name}-private-endpoint"
   location                      = var.vnetLocation
-  resource_group_name           = var.resourceGroupName
+  resource_group_name           = var.resourceGroupVNET
   subnet_id                     = data.azurerm_subnet.subnet.id
   custom_network_interface_name = "infoasstaoainic"
 

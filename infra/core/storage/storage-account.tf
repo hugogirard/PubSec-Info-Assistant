@@ -208,7 +208,7 @@ resource "azurerm_private_endpoint" "blobPrivateEndpoint" {
   count                         = var.is_secure_mode ? 1 : 0
   name                          = "${var.name}-private-endpoint-blob"
   location                      = var.location
-  resource_group_name           = var.resourceGroupName
+  resource_group_name           = var.resourceGroupVNET
   subnet_id                     = data.azurerm_subnet.subnet[0].id
   custom_network_interface_name = "infoasstblobstoragenic"
 

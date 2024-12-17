@@ -257,7 +257,7 @@ resource "azurerm_private_endpoint" "backendPrivateEndpoint" {
   count                         = var.is_secure_mode ? 1 : 0
   name                          = "${var.name}-private-endpoint"
   location                      = var.location
-  resource_group_name           = var.resourceGroupName
+  resource_group_name           = var.resourceGroupVNET
   subnet_id                     = data.azurerm_subnet.subnet[0].id
   tags                          = var.tags
   custom_network_interface_name = "infoasstwebnic"
