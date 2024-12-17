@@ -55,14 +55,14 @@ resource "azurerm_application_insights" "applicationInsights" {
 resource "azurerm_monitor_private_link_scope" "ampls" {
   count               = var.is_secure_mode ? 1 : 0
   name                = "${var.privateLinkScopeName}-pls"
-  resource_group_name = var.resourceGroupName
+  resource_group_name = var.resourceGroupVNET
 }
 
 // add scoped resource for Log Analytics Workspace
 resource "azurerm_monitor_private_link_scoped_service" "ampl-ss_log_analytics" {
   count               = var.is_secure_mode ? 1 : 0
   name                = "${var.privateLinkScopeName}-law-connection"
-  resource_group_name = var.resourceGroupName
+  resource_group_name = var.resourceGroupVNET
   scope_name          = azurerm_monitor_private_link_scope.ampls[0].name
   linked_resource_id  = azurerm_log_analytics_workspace.logAnalytics.id
 }

@@ -230,7 +230,7 @@ resource "azurerm_private_endpoint" "filePrivateEndpoint" {
   count                         = var.is_secure_mode ? 1 : 0
   name                          = "${var.name}-private-endpoint-file"
   location                      = var.location
-  resource_group_name           = var.resourceGroupName
+  resource_group_name           = var.resourceGroupVNET
   subnet_id                     = data.azurerm_subnet.subnet[0].id
   custom_network_interface_name = "infoasstfilestoragenic"
 
@@ -253,7 +253,7 @@ resource "azurerm_private_endpoint" "tablePrivateEndpoint" {
   count                         = var.is_secure_mode ? 1 : 0
   name                          = "${var.name}-private-endpoint-table"
   location                      = var.location
-  resource_group_name           = var.resourceGroupName
+  resource_group_name           = var.resourceGroupVNET
   subnet_id                     = data.azurerm_subnet.subnet[0].id
   custom_network_interface_name = "infoassttablestoragenic"
 
@@ -275,7 +275,7 @@ resource "azurerm_private_endpoint" "queuePrivateEndpoint" {
   count                         = var.is_secure_mode ? 1 : 0
   name                          = "${var.name}-private-endpoint-queue"
   location                      = var.location
-  resource_group_name           = var.resourceGroupName
+  resource_group_name           = var.resourceGroupVNET
   subnet_id                     = data.azurerm_subnet.subnet[0].id
   custom_network_interface_name = "infoasstqueuestoragenic"
 
