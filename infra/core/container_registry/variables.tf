@@ -13,8 +13,13 @@ variable "resourceGroupName" {
   default = ""
 }
 
+variable "resourceGroupVNET" {
+  type    = string
+  default = ""
+}
+
 variable "vnet_name" {
-  type = string  
+  type = string
 }
 
 variable "subnet_name" {
@@ -36,6 +41,6 @@ variable "private_dns_zone_name" {
 }
 
 variable "tags" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }

@@ -6,8 +6,12 @@ variable "location" {
   type = string
 }
 
+variable "resourceGroupVNET" {
+  type = string
+}
+
 variable "tags" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }
 
@@ -21,29 +25,29 @@ variable "sku" {
 }
 
 variable "authOptions" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }
 
 variable "semanticSearch" {
-  type = string
+  type    = string
   default = "disabled"
 }
 
 variable "resourceGroupName" {
-  type    = string
+  type = string
 }
 
 variable "azure_search_domain" {
-  type = string  
+  type = string
 }
 
-variable "key_vault_name" { 
+variable "key_vault_name" {
   type = string
 }
 
 variable "is_secure_mode" {
-  type = bool
+  type    = bool
   default = false
 }
 
@@ -52,7 +56,7 @@ variable "vnet_name" {
 }
 
 variable "subnet_name" {
-  type = string
+  type    = string
   default = ""
 }
 

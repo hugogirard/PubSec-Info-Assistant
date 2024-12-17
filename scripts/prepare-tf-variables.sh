@@ -69,4 +69,5 @@ if [[ -n $BRING_YOUR_OWN_VNET ]]; then
     export TF_VAR_privateDnsZoneNameBlob=$PRIVATE_ZONE_BLOB_NAME
     export TF_VAR_nsgSubnetLoggingName=$NSG_SUBNET_LOGGING_NAME
     export TF_VAR_nsgSubnetLoggingId=$NSG_SUBNET_LOGGING_ID    
+    export TF_VAR_resources_resource_group_name=$RESOURCES_RESOURCE_GROUP_NAME
 fi

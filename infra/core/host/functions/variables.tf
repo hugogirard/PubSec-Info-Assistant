@@ -6,22 +6,27 @@ variable "name" {
   type = string
 }
 
+variable "resourceGroupVNET" {
+  type = string
+}
+
+
 variable "location" {
   type = string
 }
 
 variable "tags" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }
 
 variable "kind" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "reserved" {
-  type = bool
+  type    = bool
   default = true
 }
 
@@ -39,7 +44,7 @@ variable "storageAccountId" {
   default = ""
 }
 
-variable "keyVaultUri" { 
+variable "keyVaultUri" {
   type = string
 }
 
@@ -275,7 +280,7 @@ variable "is_secure_mode" {
 }
 
 variable "managedIdentity" {
-  type = bool
+  type    = bool
   default = false
 }
 
@@ -284,7 +289,7 @@ variable "azure_portal_domain" {
 }
 
 variable "allowedOrigins" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
@@ -313,9 +318,9 @@ variable "logAnalyticsWorkspaceResourceId" {
 }
 
 variable "azure_environment" {
-  type        = string
+  type = string
 }
 
 variable "azure_ai_credential_domain" {
-  type        = string
+  type = string
 }

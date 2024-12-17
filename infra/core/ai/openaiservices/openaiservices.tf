@@ -62,7 +62,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_logs" {
 data "azurerm_subnet" "subnet" {
   name                 = var.subnet_name
   virtual_network_name = var.vnet_name
-  resource_group_name  = var.resourceGroupName
+  resource_group_name  = var.resourceGroupVNET
 }
 
 resource "azurerm_private_endpoint" "openaiPrivateEndpoint" {

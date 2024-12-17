@@ -61,6 +61,10 @@ variable "privateDnsZoneNameAutomation" {
   type = string
 }
 
+variable "resourceGroupVNET" {
+  type = string
+}
+
 variable "privateDnsZoneResourceIdBlob" {
   type = string
 }

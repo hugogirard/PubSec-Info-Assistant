@@ -4,7 +4,11 @@ variable "name" {
 
 variable "location" {
   type    = string
-  default = "" 
+  default = ""
+}
+
+variable "resourceGroupVNET" {
+  type = string
 }
 
 variable "tags" {
@@ -13,7 +17,7 @@ variable "tags" {
 }
 
 variable "customSubDomainName" {
-  type    = string
+  type = string
 }
 
 variable "sku" {
@@ -30,17 +34,17 @@ variable "resourceGroupName" {
   default = ""
 }
 
-variable "key_vault_name" { 
+variable "key_vault_name" {
   type = string
 }
 
 variable "is_secure_mode" {
-  type = bool
+  type    = bool
   default = false
 }
 
 variable "subnet_id" {
-  type = string
+  type    = string
   default = ""
 }
 

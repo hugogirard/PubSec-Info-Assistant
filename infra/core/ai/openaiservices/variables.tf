@@ -7,6 +7,11 @@ variable "location" {
   default = ""
 }
 
+variable "resourceGroupVNET" {
+  type = string
+}
+
+
 variable "vnetLocation" {
   type = string
 }

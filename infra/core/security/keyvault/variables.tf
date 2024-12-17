@@ -7,6 +7,10 @@ variable "name" {
 #   type = bool
 # }
 
+variable "resourceGroupVNET" {
+  type = string
+}
+
 variable "location" {
   description = "The location of the resource group"
   type        = string

@@ -48,7 +48,7 @@ module "dnsResolver" {
   source                 = "./core/network/privateDNSResolver"
   privateDNSResolverName = "infoasst-dns-${random_string.random.result}"
   location               = var.location
-  resourceGroupName      = var.resourceGroupName
+  resourceGroupName      = var.resources_resource_group_name
   vnetId                 = data.azurerm_virtual_network.existing_vnet.id
   subnetId               = data.azurerm_subnet.service_subnet.id
 }
@@ -60,7 +60,8 @@ module "logging" {
   location                     = var.location
   tags                         = local.tags
   skuName                      = "PerGB2018"
-  resourceGroupName            = var.resourceGroupName
+  resourceGroupName            = var.resources_resource_group_name
+  resourceGroupVNET            = var.resourceGroupName
   is_secure_mode               = true
   privateLinkScopeName         = "infoasst-ampls-${random_string.random.result}"
   privateDnsZoneNameMonitor    = null
@@ -78,8 +79,8 @@ module "logging" {
   subnet_name                  = var.subnet_service_name
   vnet_name                    = var.vnet_name
   vnet_id                      = data.azurerm_virtual_network.existing_vnet.id
-  nsg_id                       = var.nsgSubnetLoggingId
-  nsg_name                     = var.nsgSubnetLoggingName
+  nsg_id                       = null
+  nsg_name                     = null
 }
 
 
@@ -102,7 +103,8 @@ module "storage" {
   tags                         = local.tags
   accessTier                   = "Hot"
   allowBlobPublicAccess        = false
-  resourceGroupName            = var.resourceGroupName
+  resourceGroupName            = var.resources_resource_group_name
+  resourceGroupVNET            = var.resourceGroupName
   arm_template_schema_mgmt_api = var.arm_template_schema_mgmt_api
   key_vault_name               = module.kvModule.keyVaultName
   deleteRetentionPolicy = {
@@ -130,7 +132,8 @@ module "kvModule" {
   name                 = "infoasst-kv-${random_string.random.result}"
   location             = var.location
   kvAccessObjectId     = data.azurerm_client_config.current.object_id
-  resourceGroupName    = var.resourceGroupName
+  resourceGroupName    = var.resources_resource_group_name
+  resourceGroupVNET    = var.resourceGroupName
   tags                 = local.tags
   is_secure_mode       = true
   subnet_name          = data.azurerm_subnet.kv_subnet.name
@@ -155,7 +158,8 @@ module "enrichmentApp" {
   }
   kind                                = "linux"
   reserved                            = true
-  resourceGroupName                   = var.resourceGroupName
+  resourceGroupName                   = var.resources_resource_group_name
+  resourceGroupVNET                   = var.resourceGroupName
   storageAccountId                    = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resourceGroupName}/providers/Microsoft.Storage/storageAccounts/${module.storage.name}/services/queue/queues/${var.embeddingsQueue}"
   scmDoBuildDuringDeployment          = false
   enableOryxBuild                     = false
@@ -216,7 +220,8 @@ module "webapp" {
     capacity = 1
   }
   kind                                = "linux"
-  resourceGroupName                   = var.resourceGroupName
+  resourceGroupName                   = var.resources_resource_group_name
+  resourceGroupVNET                   = var.resourceGroupName
   location                            = var.location
   tags                                = merge(local.tags, { "azd-service-name" = "backend" })
   runtimeVersion                      = "3.12"
@@ -313,7 +318,8 @@ module "functions" {
   }
   kind                                  = "linux"
   runtime                               = "python"
-  resourceGroupName                     = var.resourceGroupName
+  resourceGroupName                     = var.resources_resource_group_name
+  resourceGroupVNET                     = var.resourceGroupName
   azure_portal_domain                   = var.azure_portal_domain
   appInsightsConnectionString           = module.logging.applicationInsightsConnectionString
   appInsightsInstrumentationKey         = module.logging.applicationInsightsInstrumentationKey
@@ -381,7 +387,8 @@ module "openaiServices" {
   location                        = var.openai_region
   vnetLocation                    = var.location
   tags                            = local.tags
-  resourceGroupName               = var.resourceGroupName
+  resourceGroupName               = var.resources_resource_group_name
+  resourceGroupVNET               = var.resourceGroupName
   useExistingAOAIService          = false
   is_secure_mode                  = true
   subnet_name                     = var.subnet_openai
@@ -428,7 +435,8 @@ module "aiDocIntelligence" {
   location                     = var.location
   tags                         = local.tags
   customSubDomainName          = "infoasst-docint-${random_string.random.result}"
-  resourceGroupName            = var.resourceGroupName
+  resourceGroupName            = var.resources_resource_group_name
+  resourceGroupVNET            = var.resourceGroupName
   key_vault_name               = module.kvModule.keyVaultName
   is_secure_mode               = var.is_secure_mode
   subnet_name                  = var.subnet_openai
@@ -442,7 +450,8 @@ module "cognitiveServices" {
   name                         = "infoasst-aisvc-${random_string.random.result}"
   location                     = var.location
   tags                         = local.tags
-  resourceGroupName            = var.resourceGroupName
+  resourceGroupName            = var.resources_resource_group_name
+  resourceGroupVNET            = var.resourceGroupName
   is_secure_mode               = true
   subnetResourceId             = null
   private_dns_zone_ids         = null
@@ -459,7 +468,8 @@ module "searchServices" {
   location                     = var.location
   tags                         = local.tags
   semanticSearch               = var.use_semantic_reranker ? "free" : null
-  resourceGroupName            = var.resourceGroupName
+  resourceGroupName            = var.resources_resource_group_name
+  resourceGroupVNET            = var.resourceGroupName
   azure_search_domain          = var.azure_search_domain
   is_secure_mode               = true
   subnet_name                  = var.subnet_openai
@@ -476,9 +486,10 @@ module "cosmosdb" {
   tags                         = local.tags
   logDatabaseName              = "statusdb"
   logContainerName             = "statuscontainer"
-  resourceGroupName            = var.resourceGroupName
+  resourceGroupName            = var.resources_resource_group_name
   key_vault_name               = module.kvModule.keyVaultName
   is_secure_mode               = true
+  resourceGroupVNET            = var.resourceGroupName
   subnet_name                  = var.subnet_data
   vnet_name                    = var.vnet_name
   private_dns_zone_ids         = null
@@ -489,7 +500,8 @@ module "acr" {
   source                = "./core/container_registry"
   name                  = "infoasstacr${random_string.random.result}"
   location              = var.location
-  resourceGroupName     = var.resourceGroupName
+  resourceGroupName     = var.resources_resource_group_name
+  resourceGroupVNET     = var.resourceGroupName
   is_secure_mode        = true
   subnet_name           = var.subnet_service_name
   vnet_name             = var.vnet_name
@@ -520,7 +532,7 @@ module "azMonitor" {
   logAnalyticsName  = module.logging.logAnalyticsName
   location          = var.location
   logWorkbookName   = "infoasst-lw-${random_string.random.result}"
-  resourceGroupName = var.resourceGroupName
+  resourceGroupName = var.resources_resource_group_name
   componentResource = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/${module.logging.logAnalyticsName}"
 }
 
@@ -538,7 +550,7 @@ module "azMonitor" {
 # }
 
 data "azurerm_resource_group" "rg" {
-  name = var.resourceGroupName
+  name = var.resources_resource_group_name
 }
 
 # // USER ROLES
@@ -555,7 +567,7 @@ module "userRoles" {
 }
 
 resource "azurerm_cosmosdb_sql_role_assignment" "user_cosmosdb_data_contributor" {
-  resource_group_name = var.resourceGroupName
+  resource_group_name = var.resources_resource_group_name
   account_name        = module.cosmosdb.name
   role_definition_id  = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resourceGroupName}/providers/Microsoft.DocumentDB/databaseAccounts/${module.cosmosdb.name}/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002" #Cosmos DB Built-in Data Contributor
   principal_id        = data.azurerm_client_config.current.object_id
@@ -568,6 +580,8 @@ data "azurerm_resource_group" "existing" {
 }
 
 # # # // SYSTEM IDENTITY ROLES
+
+
 module "webApp_OpenAiRole" {
   source = "./core/security/role"
 
@@ -731,7 +745,7 @@ resource "azurerm_cosmosdb_sql_role_assignment" "webApp_cosmosdb_data_contributo
 }
 
 resource "azurerm_cosmosdb_sql_role_assignment" "functionApp_cosmosdb_data_contributor" {
-  resource_group_name = var.resourceGroupName
+  resource_group_name = var.resources_resource_group_name
   account_name        = module.cosmosdb.name
   role_definition_id  = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resourceGroupName}/providers/Microsoft.DocumentDB/databaseAccounts/${module.cosmosdb.name}/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002" #Cosmos DB Built-in Data Contributor
   principal_id        = module.functions.identityPrincipalId

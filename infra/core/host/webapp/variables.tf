@@ -6,22 +6,26 @@ variable "plan_name" {
   type = string
 }
 
+variable "resourceGroupVNET" {
+  type = string
+}
+
 variable "location" {
   type = string
 }
 
 variable "tags" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }
 
 variable "kind" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "reserved" {
-  type = bool
+  type    = bool
   default = true
 }
 
@@ -40,12 +44,12 @@ variable "storageAccountId" {
 }
 
 variable "managedIdentity" {
-  type = bool
+  type    = bool
   default = false
 }
 
 variable "logAnalyticsWorkspaceResourceId" {
-  type = string
+  type    = string
   default = ""
 }
 
@@ -54,7 +58,7 @@ variable "applicationInsightsConnectionString" {
   default = ""
 }
 
-variable "keyVaultUri" { 
+variable "keyVaultUri" {
   type = string
 }
 
@@ -63,47 +67,47 @@ variable "keyVaultName" {
 }
 
 variable "aadClientId" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "tenantId" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "scmDoBuildDuringDeployment" {
-  type = bool
+  type    = bool
   default = true
 }
 
 variable "enableOryxBuild" {
-  type = bool
+  type    = bool
   default = true
 }
 
 variable "appSettings" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }
 
 variable "ftpsState" {
-  type = string
+  type    = string
   default = "FtpsOnly"
 }
 
 variable "alwaysOn" {
-  type = bool
+  type    = bool
   default = true
 }
 
 variable "appCommandLine" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "healthCheckPath" {
-  type = string
+  type    = string
   default = ""
 }
 
@@ -113,7 +117,7 @@ variable "azure_portal_domain" {
 }
 
 variable "allowedOrigins" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
@@ -172,5 +176,5 @@ variable "container_registry_admin_password" {
 }
 
 variable "azure_environment" {
-  type        = string
+  type = string
 }

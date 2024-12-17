@@ -48,7 +48,7 @@ data "azurerm_subnet" "subnet" {
   count                = var.is_secure_mode ? 1 : 0
   name                 = var.subnet_name
   virtual_network_name = var.vnet_name
-  resource_group_name  = var.resourceGroupName
+  resource_group_name  = var.resourceGroupVNET
 }
 
 resource "azurerm_private_endpoint" "kv_private_endpoint" {
