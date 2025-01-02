@@ -49,6 +49,7 @@ if [ -f "$ENV_DIR/environments/languages/$DEFAULT_LANGUAGE.env" ]; then
     echo "Loading environment variables for Language: $DEFAULT_LANGUAGE."
     source "$ENV_DIR/environments/languages/$DEFAULT_LANGUAGE.env"
 else
+    echo "$ENV_DIR/environments/languages/$DEFAULT_LANGUAGE.env" 
     echo "No Language set, please check local.env.example for DEFAULT_LANGUAGE"
     exit 1
 fi
