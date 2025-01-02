@@ -147,6 +147,7 @@ module "kvModule" {
 
 module "enrichmentApp" {
   source    = "./core/host/enrichmentapp"
+  depends_on  = [module.kvModule]
   name      = var.enrichmentServiceName != "" ? var.enrichmentServiceName : "infoasst-enrichmentweb-${random_string.random.result}"
   plan_name = var.enrichmentAppServicePlanName != "" ? var.enrichmentAppServicePlanName : "infoasst-enrichmentasp-${random_string.random.result}"
   location  = var.location
