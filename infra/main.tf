@@ -211,6 +211,7 @@ module "enrichmentApp" {
 
 # // The application frontend
 module "webapp" {
+  depends_on = [module.kvModule]
   source    = "./core/host/webapp"
   name      = var.backendServiceName != "" ? var.backendServiceName : "infoasst-web-${random_string.random.result}"
   plan_name = var.appServicePlanName != "" ? var.appServicePlanName : "infoasst-asp-${random_string.random.result}"
@@ -304,7 +305,7 @@ module "webapp" {
 # // Function App 
 module "functions" {
   source = "./core/host/functions"
-
+  depends_on = [module.kvModule]
   name         = var.functionsAppName != "" ? var.functionsAppName : "infoasst-func-${random_string.random.result}"
   location     = var.location
   tags         = local.tags
