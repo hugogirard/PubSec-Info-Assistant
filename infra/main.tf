@@ -211,7 +211,7 @@ module "enrichmentApp" {
 
 # // The application frontend
 module "webapp" {
-  depends_on = [module.kvModule]
+
   source    = "./core/host/webapp"
   name      = var.backendServiceName != "" ? var.backendServiceName : "infoasst-web-${random_string.random.result}"
   plan_name = var.appServicePlanName != "" ? var.appServicePlanName : "infoasst-asp-${random_string.random.result}"
