@@ -15,6 +15,7 @@ stages:
   jobs:
 
   - deployment: Shared
+    environment: dev
     timeoutInMinutes: 120
     pool:
       name: 'default'
