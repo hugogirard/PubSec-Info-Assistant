@@ -3,17 +3,42 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- add-different-rg-features
+# trigger:
+# - add-different-rg-features
 
-pool:
-  name: default
+# pool:
+#   name: default
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+# steps:
+# - script: echo Hello, world!
+#   displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+# - script: |
+#     echo Add other tasks to build, test, and deploy your project.
+#     echo See https://aka.ms/yaml
+#   displayName: 'Run a multi-line script'
+
+# trigger:
+#   batch: true
+#   branches:
+#     include: [ add-different-rg-features ]
+
+# pr: none
+
+stages:
+- stage: Deploy
+  jobs:
+
+  - deployment: Shared
+    environment: $(environment)
+    timeoutInMinutes: 120
+    pool:
+      name: 'default'
+    strategy:
+        runOnce:    #rolling, canary are the other strategies that are supported
+          deploy:
+            steps:
+            - script: |
+                echo Add other tasks to build, test, and deploy your project.
+                echo See https://aka.ms/yaml
+              displayName: 'Run a multi-line script'
