@@ -14,7 +14,7 @@ parameters:
   default: false
   
 steps:
-- base: |
+- bash: |
     # Debug step to print DEFAULT_LANGUAGE environment variable
     echo "DEFAULT_LANGUAGE: $DEFAULT_LANGUAGE"
 - bash: |
