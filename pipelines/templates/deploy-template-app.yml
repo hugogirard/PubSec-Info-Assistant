@@ -59,7 +59,7 @@ steps:
 - template: make-command.yml
   parameters:
     displayName: 'Extract environment variables'
-    makeCommand: 'extract-env-secure-network'
+    makeCommand: 'extract-env'
 
 # - template: make-command.yml
 #   parameters:
