@@ -50,11 +50,11 @@ steps:
 #     displayName: 'Build'
 #     makeCommand: 'build'
 
-# - ${{ if eq(parameters.fullBuild, true) }}:
-#   - template: make-command.yml
-#     parameters:
-#       displayName: 'Deploy Infrastructure'
-#       makeCommand: 'infrastructure-remote-backend'
+- ${{ if eq(parameters.fullBuild, true) }}:
+  - template: make-command.yml
+    parameters:
+      displayName: 'Deploy Infrastructure'
+      makeCommand: 'infrastructure-remote-backend'
 
 - template: make-command.yml
   parameters:
