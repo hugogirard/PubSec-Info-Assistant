@@ -56,10 +56,10 @@ steps:
 #       displayName: 'Deploy Infrastructure'
 #       makeCommand: 'infrastructure-remote-backend'
 
-  - template: make-command.yml
-    parameters:
-      displayName: 'Extract environment variables'
-      makeCommand: 'extract-env'
+- template: make-command.yml
+  parameters:
+    displayName: 'Extract environment variables'
+    makeCommand: 'extract-env'
 
 #   - template: make-command.yml
 #     parameters:
