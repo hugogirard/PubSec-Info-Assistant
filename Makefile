@@ -52,7 +52,7 @@ extract-env-debug-functions: ## Extract local.settings.json to debug functions f
 	@./scripts/json-to-env.function.debug.sh < inf_output.json > ./functions/local.settings.json
 
 extract-output:
-	@./scripts/extract-output.sh
+	@./scripts/extract-output-tf.sh
 
 # Utils (used by other Makefile rules)
 check-subscription:
