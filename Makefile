@@ -24,8 +24,11 @@ infrastructure: check-subscription ## Deploy infrastructure
 # extract-env: check-secure-mode-connectivity extract-env-debug-webapp extract-env-debug-functions ## Extract infrastructure.env file from Terraform output
 # 	 @./scripts/json-to-env.sh < inf_output.json > ./scripts/environments/infrastructure.env
 
-extract-env: extract-env-debug-webapp extract-env-debug-functions ## Extract infrastructure.env file from Terraform output
-	 @./scripts/json-to-env.sh < inf_output.json > ./scripts/environments/infrastructure.env
+extract-env: 
+	@./scripts/json-to-env.sh < inf_output.json > ./scripts/environments/infrastructure.env
+
+# extract-env: extract-env-debug-webapp extract-env-debug-functions ## Extract infrastructure.env file from Terraform output
+# 	 @./scripts/json-to-env.sh < inf_output.json > ./scripts/environments/infrastructure.env
 
 # extract-env-secure-network: extract-env-debug-webapp extract-env-debug-functions
 #     @./scripts/json-to-env.sh < inf_output.json > ./scripts/environments/infrastructure.env
