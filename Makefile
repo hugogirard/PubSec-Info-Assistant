@@ -51,6 +51,9 @@ extract-env-debug-webapp: ## Extract infrastructure.debug.env file from Terrafor
 extract-env-debug-functions: ## Extract local.settings.json to debug functions from Terraform output
 	@./scripts/json-to-env.function.debug.sh < inf_output.json > ./functions/local.settings.json
 
+extract-output:
+	@./scripts/extract-output.sh
+
 # Utils (used by other Makefile rules)
 check-subscription:
 	@./scripts/check-subscription.sh 
