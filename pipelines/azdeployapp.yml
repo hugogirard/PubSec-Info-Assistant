@@ -5,6 +5,10 @@ trigger:
   batch: true
   branches:
     include: [ add-different-rg-features ]
+  paths:
+    include:
+      - pipelines/templates/deploy-template-app.yml
+      - pipelines/azdeployapp.yml
 
 pr: none
 
