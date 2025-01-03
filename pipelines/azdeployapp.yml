@@ -1,0 +1,26 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+
+trigger:
+  batch: true
+  branches:
+    include: [ add-different-rg-features ]
+
+pr: none
+
+stages:
+- stage: Deploy
+  variables:
+  - group: pubsec
+  jobs:
+
+  - deployment: Shared
+    environment: dev
+    timeoutInMinutes: 120
+    pool:
+      name: 'default'
+    strategy:
+        runOnce:    #rolling, canary are the other strategies that are supported
+          deploy:
+            steps:
+            - template: templates/deploy-template-app.yml
