@@ -61,10 +61,10 @@ steps:
     displayName: 'Extract environment variables'
     makeCommand: 'extract-env'
 
-#   - template: make-command.yml
-#     parameters:
-#       displayName: 'Deploy search indexes'
-#       makeCommand: 'deploy-search-indexes'
+# - template: make-command.yml
+#   parameters:
+#     displayName: 'Deploy search indexes'
+#     makeCommand: 'deploy-search-indexes'
       
 #   - template: make-command.yml
 #     parameters:
