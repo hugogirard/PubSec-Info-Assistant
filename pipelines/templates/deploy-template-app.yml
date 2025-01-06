@@ -15,17 +15,17 @@ steps:
 - checkout: self
   clean: true
 
-- bash: |
-    az login --service-principal --username $CLIENT_ID --password $CLIENT_SECRET --tenant $TENANT_ID
-    echo "This is a dummy file" > dummyfile.txt
-    az storage blob upload --account-name strtfstatehg --container-name output --name dummyfile.txt --file dummyfile.txt --auth-mode login
-  displayName: 'Azure Login'
-
 # - bash: |
-#     docker login $(CONTAINER_REGISTRY_ADDRESS) -u $(CONTAINER_REGISTRY_USERNAME) -p $(CONTAINER_REGISTRY_PASSWORD)
-#     docker pull $(CONTAINER_REGISTRY_ADDRESS)/info-asst-devcontainer:latest
-#   displayName: Pull latest dev container from container registry for layer caching
-#   continueOnError: true # for first build, no cache
+#     az login --service-principal --username $CLIENT_ID --password $CLIENT_SECRET --tenant $TENANT_ID
+#     echo "This is a dummy file" > dummyfile.txt
+#     az storage blob upload --account-name strtfstatehg --container-name output --name dummyfile.txt --file dummyfile.txt --auth-mode login
+#   displayName: 'Azure Login'
+
+- bash: |
+    docker login $(CONTAINER_REGISTRY_ADDRESS) -u $(CONTAINER_REGISTRY_USERNAME) -p $(CONTAINER_REGISTRY_PASSWORD)
+    docker pull $(CONTAINER_REGISTRY_ADDRESS)/info-asst-devcontainer:latest
+  displayName: Pull latest dev container from container registry for layer caching
+  continueOnError: false # for first build, no cache
 
 # - bash: |
 #     set -e
