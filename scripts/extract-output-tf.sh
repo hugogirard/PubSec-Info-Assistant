@@ -5,4 +5,4 @@
 set -e
 
 printInfo "Writing terraform output to inf_output.json"
-terraform output -json > inf_output.json
+sudo terraform output -json > inf_output.json

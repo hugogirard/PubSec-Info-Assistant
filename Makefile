@@ -27,9 +27,6 @@ infrastructure: check-subscription ## Deploy infrastructure
 extract-env: 
 	@./scripts/json-to-env.sh < inf_output.json > ./scripts/environments/infrastructure.env
 
-extract-output-var:
-	@./scripts/extract-output-tf.sh
-
 # extract-env: extract-env-debug-webapp extract-env-debug-functions ## Extract infrastructure.env file from Terraform output
 # 	 @./scripts/json-to-env.sh < inf_output.json > ./scripts/environments/infrastructure.env
 
