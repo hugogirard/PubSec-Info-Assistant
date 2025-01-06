@@ -40,46 +40,51 @@ steps:
   displayName: Push latest dev container image to container registry
   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/add-different-rg-features'), eq(variables['Build.SourceBranch'], 'refs/heads/vNext-Dev')))
 
-- template: make-command.yml
-  parameters:
-    displayName: 'Dev container take ownership of Directory'
-    makeCommand: 'take-dir-ownership'
+- bash: |
+    set -e
+    terraform output -json > terraform_output.json
+  displayName: 'Extract output variables from Terraform'
+
+# - template: make-command.yml
+#   parameters:
+#     displayName: 'Dev container take ownership of Directory'
+#     makeCommand: 'take-dir-ownership'
 
 # - template: make-command.yml
 #   parameters:
 #     displayName: 'Build'
 #     makeCommand: 'build'
 
-- ${{ if eq(parameters.fullBuild, true) }}:
-  - template: make-command.yml
-    parameters:
-      displayName: 'Deploy Infrastructure'
-      makeCommand: 'infrastructure-remote-backend'
+# - ${{ if eq(parameters.fullBuild, true) }}:
+#   - template: make-command.yml
+#     parameters:
+#       displayName: 'Deploy Infrastructure'
+#       makeCommand: 'infrastructure-remote-backend'
 
-- template: make-command.yml
-  parameters:
-    displayName: 'Extract environment variables'
-    makeCommand: 'extract-env'
+# - template: make-command.yml
+#   parameters:
+#     displayName: 'Extract environment variables'
+#     makeCommand: 'extract-env'
 
 # - template: make-command.yml
 #   parameters:
 #     displayName: 'Extract output variables'
 #     makeCommand: 'extract-output'
 
-- template: make-command.yml
-  parameters:
-    displayName: 'Deploy search indexes'
-    makeCommand: 'deploy-search-indexes'
+# - template: make-command.yml
+#   parameters:
+#     displayName: 'Deploy search indexes'
+#     makeCommand: 'deploy-search-indexes'
       
 #   - template: make-command.yml
 #     parameters:
 #       displayName: 'Deploy Azure Functions'
 #       makeCommand: 'deploy-functions'   
   
-#   - template: make-command.yml
-#     parameters:
-#       displayName: 'Deploy Web App'
-#       makeCommand: 'deploy-webapp'
+- template: make-command.yml
+  parameters:
+    displayName: 'Deploy Web App'
+    makeCommand: 'deploy-webapp'
 
 #   - template: make-command.yml
 #     parameters:
