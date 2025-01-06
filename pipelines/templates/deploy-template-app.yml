@@ -40,10 +40,10 @@ steps:
   displayName: Push latest dev container image to container registry
   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/add-different-rg-features'), eq(variables['Build.SourceBranch'], 'refs/heads/vNext-Dev')))
 
-- bash: |
-    set -e
-    terraform output -json > terraform_output.json
-  displayName: 'Extract output variables from Terraform'
+- template: make-command.yml
+  parameters:
+    displayName: 'Extract output variables'
+    makeCommand: 'extract-output-var'
 
 # - template: make-command.yml
 #   parameters:
