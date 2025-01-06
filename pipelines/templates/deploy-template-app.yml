@@ -78,10 +78,10 @@ steps:
 #     displayName: 'Deploy search indexes'
 #     makeCommand: 'deploy-search-indexes'
       
-#   - template: make-command.yml
-#     parameters:
-#       displayName: 'Deploy Azure Functions'
-#       makeCommand: 'deploy-functions'   
+- template: make-command.yml
+  parameters:
+    displayName: 'Deploy Azure Functions'
+    makeCommand: 'deploy-functions'   
   
 - template: make-command.yml
   parameters:
