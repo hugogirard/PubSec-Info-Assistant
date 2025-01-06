@@ -45,26 +45,26 @@ steps:
     displayName: 'Dev container take ownership of Directory'
     makeCommand: 'take-dir-ownership'
 
+# - template: make-command.yml
+#   parameters:
+#     displayName: 'Extract output variables'
+#     makeCommand: 'extract-output-var'
+
 - template: make-command.yml
   parameters:
-    displayName: 'Extract output variables'
-    makeCommand: 'extract-output-var'
+    displayName: 'Build'
+    makeCommand: 'build'
 
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Build'
-#     makeCommand: 'build'
+- ${{ if eq(parameters.fullBuild, true) }}:
+  - template: make-command.yml
+    parameters:
+      displayName: 'Deploy Infrastructure'
+      makeCommand: 'infrastructure-remote-backend'
 
-# - ${{ if eq(parameters.fullBuild, true) }}:
-#   - template: make-command.yml
-#     parameters:
-#       displayName: 'Deploy Infrastructure'
-#       makeCommand: 'infrastructure-remote-backend'
-
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Extract environment variables'
-#     makeCommand: 'extract-env'
+- template: make-command.yml
+  parameters:
+    displayName: 'Extract environment variables'
+    makeCommand: 'extract-env'
 
 # - template: make-command.yml
 #   parameters:
