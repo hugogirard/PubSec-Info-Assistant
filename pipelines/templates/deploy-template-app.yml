@@ -42,13 +42,13 @@ steps:
 
 - template: make-command.yml
   parameters:
+    displayName: 'Dev container take ownership of Directory'
+    makeCommand: 'take-dir-ownership'
+
+- template: make-command.yml
+  parameters:
     displayName: 'Extract output variables'
     makeCommand: 'extract-output-var'
-
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Dev container take ownership of Directory'
-#     makeCommand: 'take-dir-ownership'
 
 # - template: make-command.yml
 #   parameters:
