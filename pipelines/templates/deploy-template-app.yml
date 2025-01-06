@@ -68,27 +68,27 @@ steps:
 #     az storage blob upload --account-name strtfstatehg --container-name output --name dummyfile.txt --file dummyfile.txt --auth-mode login
 #   displayName: 'Azure Login'
 
-- template: make-command.yml
-  parameters:
-    displayName: 'Extract environment variables'
-    makeCommand: 'extract-env'
+# - template: make-command.yml
+#   parameters:
+#     displayName: 'Extract environment variables'
+#     makeCommand: 'extract-env'
 
 # - template: make-command.yml
 #   parameters:
 #     displayName: 'Deploy search indexes'
 #     makeCommand: 'deploy-search-indexes'
       
-- template: make-command.yml
-  parameters:
-    displayName: 'Deploy Azure Functions'
-    makeCommand: 'deploy-functions'   
+# - template: make-command.yml
+#   parameters:
+#     displayName: 'Deploy Azure Functions'
+#     makeCommand: 'deploy-functions'   
   
-- template: make-command.yml
-  parameters:
-    displayName: 'Deploy Web App'
-    makeCommand: 'deploy-webapp'
+# - template: make-command.yml
+#   parameters:
+#     displayName: 'Deploy Web App'
+#     makeCommand: 'deploy-webapp'
 
-#   - template: make-command.yml
-#     parameters:
-#       displayName: 'Deploy Enrichments'
-#       makeCommand: 'deploy-enrichments'
+# - template: make-command.yml
+#   parameters:
+#     displayName: 'Deploy Enrichments'
+#     makeCommand: 'deploy-enrichments'
