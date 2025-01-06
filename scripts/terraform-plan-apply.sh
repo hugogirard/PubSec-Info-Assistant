@@ -147,7 +147,4 @@ if (( ${#OUTPUT_FILES[@]} ));
 then
     printInfo "Writing terraform output to ${OUTPUT_FILES[*]}"
     terraform output -json | tee ${OUTPUT_FILES[*]} > /dev/null
-    az login --service-principal --username $CLIENT_ID --password $CLIENT_SECRET --tenant $TENANT_ID
-    echo "This is a dummy file" > dummyfile.txt
-    az storage blob upload --account-name strtfstatehg --container-name output --name inf_output.json  --file inf_output.json  --auth-mode login    
 fi
