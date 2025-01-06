@@ -46,26 +46,32 @@ steps:
 #   displayName: Push latest dev container image to container registry
 #   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/add-different-rg-features'), eq(variables['Build.SourceBranch'], 'refs/heads/vNext-Dev')))
 
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Dev container take ownership of Directory'
-#     makeCommand: 'take-dir-ownership'
+- template: make-command.yml
+  parameters:
+    displayName: 'Dev container take ownership of Directory'
+    makeCommand: 'take-dir-ownership'
 
 # - template: make-command.yml
 #   parameters:
 #     displayName: 'Build'
 #     makeCommand: 'build'
 
-# - ${{ if eq(parameters.fullBuild, true) }}:
-#   - template: make-command.yml
-#     parameters:
-#       displayName: 'Deploy Infrastructure'
-#       makeCommand: 'infrastructure-remote-backend'
+- ${{ if eq(parameters.fullBuild, true) }}:
+  - template: make-command.yml
+    parameters:
+      displayName: 'Deploy Infrastructure'
+      makeCommand: 'infrastructure-remote-backend'
 
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Extract environment variables'
-#     makeCommand: 'extract-env'
+# - bash: |
+#     az login --service-principal --username $CLIENT_ID --password $CLIENT_SECRET --tenant $TENANT_ID
+#     echo "This is a dummy file" > dummyfile.txt
+#     az storage blob upload --account-name strtfstatehg --container-name output --name dummyfile.txt --file dummyfile.txt --auth-mode login
+#   displayName: 'Azure Login'
+
+- template: make-command.yml
+  parameters:
+    displayName: 'Extract environment variables'
+    makeCommand: 'extract-env'
 
 # - template: make-command.yml
 #   parameters:
