@@ -22,49 +22,45 @@ steps:
 #   displayName: 'Azure Login'
 
 - bash: |
-    ls './scripts'
-  displayName: 'List files'
+    docker login $(CONTAINER_REGISTRY_ADDRESS) -u $(CONTAINER_REGISTRY_USERNAME) -p $(CONTAINER_REGISTRY_PASSWORD)
+    docker pull $(CONTAINER_REGISTRY_ADDRESS)/info-asst-devcontainer:latest
+  displayName: Pull latest dev container from container registry for layer caching
+  continueOnError: true # for first build, no cache
 
-# - bash: |
-#     docker login $(CONTAINER_REGISTRY_ADDRESS) -u $(CONTAINER_REGISTRY_USERNAME) -p $(CONTAINER_REGISTRY_PASSWORD)
-#     docker pull $(CONTAINER_REGISTRY_ADDRESS)/info-asst-devcontainer:latest
-#   displayName: Pull latest dev container from container registry for layer caching
-#   continueOnError: true # for first build, no cache
+- bash: |
+    set -e
+    docker build '$(Build.SourcesDirectory)/.devcontainer' \
+      -t 'info-asst-devcontainer:$(Build.BuildId)' \
+      -t 'info-asst-devcontainer:latest' \
+      -f '$(Build.SourcesDirectory)/.devcontainer/Dockerfile' \
+      --cache-from $(CONTAINER_REGISTRY_ADDRESS)/info-asst-devcontainer:latest \
+      --build-arg BUILDKIT_INLINE_CACHE=1 \
+      --build-arg USER_UID=$(id -u) \
+      --build-arg USER_GID=$(id -g)
+  displayName: Build dev container Docker Image
 
-# - bash: |
-#     set -e
-#     docker build '$(Build.SourcesDirectory)/.devcontainer' \
-#       -t 'info-asst-devcontainer:$(Build.BuildId)' \
-#       -t 'info-asst-devcontainer:latest' \
-#       -f '$(Build.SourcesDirectory)/.devcontainer/Dockerfile' \
-#       --cache-from $(CONTAINER_REGISTRY_ADDRESS)/info-asst-devcontainer:latest \
-#       --build-arg BUILDKIT_INLINE_CACHE=1 \
-#       --build-arg USER_UID=$(id -u) \
-#       --build-arg USER_GID=$(id -g)
-#   displayName: Build dev container Docker Image
+- bash: |
+    set -e
+    docker image tag info-asst-devcontainer:latest $(CONTAINER_REGISTRY_ADDRESS)/info-asst-devcontainer:latest
+    docker image push $(CONTAINER_REGISTRY_ADDRESS)/info-asst-devcontainer:latest
+  displayName: Push latest dev container image to container registry
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/add-different-rg-features'), eq(variables['Build.SourceBranch'], 'refs/heads/vNext-Dev')))
 
-# - bash: |
-#     set -e
-#     docker image tag info-asst-devcontainer:latest $(CONTAINER_REGISTRY_ADDRESS)/info-asst-devcontainer:latest
-#     docker image push $(CONTAINER_REGISTRY_ADDRESS)/info-asst-devcontainer:latest
-#   displayName: Push latest dev container image to container registry
-#   condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/add-different-rg-features'), eq(variables['Build.SourceBranch'], 'refs/heads/vNext-Dev')))
+- template: make-command.yml
+  parameters:
+    displayName: 'Dev container take ownership of Directory'
+    makeCommand: 'take-dir-ownership'
 
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Dev container take ownership of Directory'
-#     makeCommand: 'take-dir-ownership'
+- template: make-command.yml
+  parameters:
+    displayName: 'Build'
+    makeCommand: 'build'
 
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Build'
-#     makeCommand: 'build'
-
-# - ${{ if eq(parameters.fullBuild, true) }}:
-#   - template: make-command.yml
-#     parameters:
-#       displayName: 'Deploy Infrastructure'
-#       makeCommand: 'infrastructure-remote-backend'
+- ${{ if eq(parameters.fullBuild, true) }}:
+  - template: make-command.yml
+    parameters:
+      displayName: 'Deploy Infrastructure'
+      makeCommand: 'infrastructure-remote-backend'
 
 # - bash: |
 #     az login --service-principal --username $CLIENT_ID --password $CLIENT_SECRET --tenant $TENANT_ID
@@ -72,10 +68,10 @@ steps:
 #     az storage blob upload --account-name strtfstatehg --container-name output --name dummyfile.txt --file dummyfile.txt --auth-mode login
 #   displayName: 'Azure Login'
 
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Extract environment variables'
-#     makeCommand: 'extract-env'
+- template: make-command.yml
+  parameters:
+    displayName: 'Extract environment variables'
+    makeCommand: 'extract-env'
 
 # - template: make-command.yml
 #   parameters:
@@ -87,10 +83,10 @@ steps:
 #       displayName: 'Deploy Azure Functions'
 #       makeCommand: 'deploy-functions'   
   
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Deploy Web App'
-#     makeCommand: 'deploy-webapp'
+- template: make-command.yml
+  parameters:
+    displayName: 'Deploy Web App'
+    makeCommand: 'deploy-webapp'
 
 #   - template: make-command.yml
 #     parameters:

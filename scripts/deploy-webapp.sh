@@ -53,10 +53,10 @@ $DIR/../scripts/push-to-acr.sh -n webapp -t $tag -f $DIR/../artifacts/webapp
 
 # Update the webapp with the new image
 echo "Updating the webapp with the new image"
-az webapp config container set --name $AZURE_WEBAPP_NAME --resource-group $RESOURCE_GROUP_NAME --container-image-name ${CONTAINER_REGISTRY}/webapp:$tag --container-registry-url "https://${CONTAINER_REGISTRY}" --container-registry-user $CONTAINER_REGISTRY_USERNAME --container-registry-password $CONTAINER_REGISTRY_PASSWORD --enable-app-service-storage false
+az webapp config container set --name $AZURE_WEBAPP_NAME --resource-group $RESOURCES_RESOURCE_GROUP_NAME --container-image-name ${CONTAINER_REGISTRY}/webapp:$tag --container-registry-url "https://${CONTAINER_REGISTRY}" --container-registry-user $CONTAINER_REGISTRY_USERNAME --container-registry-password $CONTAINER_REGISTRY_PASSWORD --enable-app-service-storage false
 
 # Restart the webapp
-az webapp restart --name $AZURE_WEBAPP_NAME --resource-group $RESOURCE_GROUP_NAME
+az webapp restart --name $AZURE_WEBAPP_NAME --resource-group $RESOURCES_RESOURCE_GROUP_NAME
 
 echo "Webapp deployed successfully"
 echo -e "\n"
