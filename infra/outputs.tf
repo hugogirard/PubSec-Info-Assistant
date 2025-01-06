@@ -206,9 +206,9 @@ output "CONTAINER_REGISTRY_PASSWORD" {
   value     = module.acr.admin_password
 }
 
-output "DNS_PRIVATE_RESOLVER_IP" {
-  value = var.is_secure_mode ? module.dnsResolver.dns_private_resolver_ip : ""
-}
+# output "DNS_PRIVATE_RESOLVER_IP" {
+#   value = var.is_secure_mode ? module.dnsResolver.dns_private_resolver_ip : ""
+# }
 
 output "AZURE_AI_CREDENTIAL_DOMAIN" {
   value = var.azure_ai_private_link_domain

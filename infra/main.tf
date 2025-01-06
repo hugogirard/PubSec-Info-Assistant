@@ -44,14 +44,14 @@ data "azurerm_subnet" "service_subnet" {
   resource_group_name  = var.resourceGroupName
 }
 
-module "dnsResolver" {
-  source                 = "./core/network/privateDNSResolver"
-  privateDNSResolverName = "infoasst-dns-${random_string.random.result}"
-  location               = var.location
-  resourceGroupName      = var.resources_resource_group_name
-  vnetId                 = data.azurerm_virtual_network.existing_vnet.id
-  subnetId               = data.azurerm_subnet.service_subnet.id
-}
+# module "dnsResolver" {
+#   source                 = "./core/network/privateDNSResolver"
+#   privateDNSResolverName = "infoasst-dns-${random_string.random.result}"
+#   location               = var.location
+#   resourceGroupName      = var.resources_resource_group_name
+#   vnetId                 = data.azurerm_virtual_network.existing_vnet.id
+#   subnetId               = data.azurerm_subnet.service_subnet.id
+# }
 
 module "logging" {
   source                       = "./core/logging/loganalytics"
