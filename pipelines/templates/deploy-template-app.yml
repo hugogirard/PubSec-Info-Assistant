@@ -18,7 +18,7 @@ steps:
 - bash: |
     az login --service-principal --username $CLIENT_ID --password $CLIENT_SECRET --tenant $TENANT_ID
     echo "This is a dummy file" > dummyfile.txt
-    az storage blob upload --account-name strtfstatehg --container-name output --name dummyfile.txt --file myFile.txt --auth-mode login
+    az storage blob upload --account-name strtfstatehg --container-name output --name dummyfile.txt --file dummyfile.txt --auth-mode login
   displayName: 'Azure Login'
 
 # - bash: |
