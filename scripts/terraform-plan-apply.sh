@@ -110,7 +110,8 @@ case $plan_exit_code in
         then
             printInfo "Writing terraform output to ${OUTPUT_FILES[*]}"
             terraform output -json | tee ${OUTPUT_FILES[*]} > /dev/null
-        fi    exit 0
+        fi
+        exit 0
         ;;
     1)
         exit 1
@@ -145,6 +146,7 @@ terraform apply -input=false "$PLAN_NAME"
 if (( ${#OUTPUT_FILES[@]} ));
 then
     printInfo "Writing terraform output to ${OUTPUT_FILES[*]}"
-    terraform output -json | tee ${OUTPUT_FILES[*]} > /dev/nul
-    printInfo "Directory of output ${DIR}"
+    terraform output -json | tee ${OUTPUT_FILES[*]} > /dev/null
+    printInfo "Writting in directory ${DIR}"
+    
 fi
