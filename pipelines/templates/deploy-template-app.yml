@@ -15,12 +15,6 @@ steps:
 - checkout: self
   clean: true
 
-# - bash: |
-#     az login --service-principal --username $CLIENT_ID --password $CLIENT_SECRET --tenant $TENANT_ID
-#     echo "This is a dummy file" > dummyfile.txt
-#     az storage blob upload --account-name strtfstatehg --container-name output --name dummyfile.txt --file dummyfile.txt --auth-mode login
-#   displayName: 'Azure Login'
-
 - bash: |
     docker login $(CONTAINER_REGISTRY_ADDRESS) -u $(CONTAINER_REGISTRY_USERNAME) -p $(CONTAINER_REGISTRY_PASSWORD)
     docker pull $(CONTAINER_REGISTRY_ADDRESS)/info-asst-devcontainer:latest
@@ -68,27 +62,27 @@ steps:
 #     az storage blob upload --account-name strtfstatehg --container-name output --name dummyfile.txt --file dummyfile.txt --auth-mode login
 #   displayName: 'Azure Login'
 
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Extract environment variables'
-#     makeCommand: 'extract-env'
+- template: make-command.yml
+  parameters:
+    displayName: 'Extract environment variables'
+    makeCommand: 'extract-env'
 
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Deploy search indexes'
-#     makeCommand: 'deploy-search-indexes'
+- template: make-command.yml
+  parameters:
+    displayName: 'Deploy search indexes'
+    makeCommand: 'deploy-search-indexes'
       
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Deploy Azure Functions'
-#     makeCommand: 'deploy-functions'   
+- template: make-command.yml
+  parameters:
+    displayName: 'Deploy Azure Functions'
+    makeCommand: 'deploy-functions'   
   
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Deploy Web App'
-#     makeCommand: 'deploy-webapp'
+- template: make-command.yml
+  parameters:
+    displayName: 'Deploy Web App'
+    makeCommand: 'deploy-webapp'
 
-# - template: make-command.yml
-#   parameters:
-#     displayName: 'Deploy Enrichments'
-#     makeCommand: 'deploy-enrichments'
+- template: make-command.yml
+  parameters:
+    displayName: 'Deploy Enrichments'
+    makeCommand: 'deploy-enrichments'
