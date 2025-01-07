@@ -90,32 +90,32 @@ data "azurerm_subnet" "subnet" {
 }
 
 // add private endpoint for azure monitor - metrics, app insights, log analytics
-resource "azurerm_private_endpoint" "ampls" {
-  count                         = var.is_secure_mode ? 1 : 0
-  name                          = "${var.privateLinkScopeName}-private-endpoint"
-  location                      = var.location
-  resource_group_name           = var.resourceGroupVNET
-  subnet_id                     = data.azurerm_subnet.subnet[0].id
-  custom_network_interface_name = "infoasstamplsnic"
+# resource "azurerm_private_endpoint" "ampls" {
+#   count                         = var.is_secure_mode ? 1 : 0
+#   name                          = "${var.privateLinkScopeName}-private-endpoint"
+#   location                      = var.location
+#   resource_group_name           = var.resourceGroupVNET
+#   subnet_id                     = data.azurerm_subnet.subnet[0].id
+#   custom_network_interface_name = "infoasstamplsnic"
 
-  private_service_connection {
-    name                           = "${var.privateLinkScopeName}-privateserviceconnection"
-    private_connection_resource_id = azurerm_monitor_private_link_scope.ampls[0].id
-    is_manual_connection           = true
-    subresource_names              = [var.groupId]
-  }
+#   private_service_connection {
+#     name                           = "${var.privateLinkScopeName}-privateserviceconnection"
+#     private_connection_resource_id = azurerm_monitor_private_link_scope.ampls[0].id
+#     is_manual_connection           = true
+#     subresource_names              = [var.groupId]
+#   }
 
-  # private_dns_zone_group {
-  #   name = "ampls"
-  #   private_dns_zone_ids = [
-  #     azurerm_private_dns_zone.monitor[0].id,
-  #     azurerm_private_dns_zone.oms[0].id,
-  #     azurerm_private_dns_zone.ods[0].id,
-  #     azurerm_private_dns_zone.agentsvc[0].id,
-  #     var.privateDnsZoneResourceIdBlob
-  #   ]
-  # }
-}
+#   # private_dns_zone_group {
+#   #   name = "ampls"
+#   #   private_dns_zone_ids = [
+#   #     azurerm_private_dns_zone.monitor[0].id,
+#   #     azurerm_private_dns_zone.oms[0].id,
+#   #     azurerm_private_dns_zone.ods[0].id,
+#   #     azurerm_private_dns_zone.agentsvc[0].id,
+#   #     var.privateDnsZoneResourceIdBlob
+#   #   ]
+#   # }
+# }
 
 # resource "azurerm_private_dns_zone" "monitor" {
 #   count               = var.is_secure_mode ? 1 : 0
