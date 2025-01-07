@@ -50,7 +50,6 @@ tag=$(cat "$DIR/../container_images/webapp_container_image/image_tag.txt")
 echo "Tag for the docker image is $tag"
 echo "Pushing the docker image to the container registry"
 $DIR/../scripts/push-to-acr.sh -n webapp -t $tag -f $DIR/../artifacts/webapp
-$DIR/../scripts/push-to-acr.sh -n webapp -t latest -f $DIR/../artifacts/webapp
 
 # Update the webapp with the new image
 echo "Updating the webapp with the new image"

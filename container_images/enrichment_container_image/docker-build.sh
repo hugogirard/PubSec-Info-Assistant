@@ -13,7 +13,6 @@ sudo docker build -f ./container_images/enrichment_container_image/Dockerfile -t
 tag=$(date -u +"%Y%m%d-%H%M%S")
 echo "Tagging image with: $tag"
 sudo docker tag enrichmentapp enrichmentapp:$tag
-sudo docker tag enrichmentapp enrichmentapp:latest
 
 # Output the tag to a file to be used in deployment
 echo -n "$tag" > ./container_images/enrichment_container_image/image_tag.txt

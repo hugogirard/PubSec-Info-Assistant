@@ -10,10 +10,10 @@ echo -e "\n"
 sudo docker build -f ./container_images/webapp_container_image/Dockerfile -t webapp . --build-arg BUILDKIT_INLINE_CACHE=1
 
 # Generate a unique tag for the image
-tag=$(date -u +"%Y%m%d-%H%M%S")
+tag=latest
+#tag=$(date -u +"%Y%m%d-%H%M%S")
 echo "Tagging image with: $tag"
 sudo docker tag webapp webapp:$tag
-sudo docker tag webapp webapp:latest
 
 # Output the tag to a file to be used in deployment
 echo -n "$tag" > ./container_images/webapp_container_image/image_tag.txt

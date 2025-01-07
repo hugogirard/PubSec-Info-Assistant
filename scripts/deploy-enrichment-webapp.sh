@@ -50,7 +50,6 @@ tag=$(cat "$DIR/../container_images/enrichment_container_image/image_tag.txt")
 echo "Tag for the docker image is $tag"
 echo "Pushing the docker image to the container registry"
 $DIR/../scripts/push-to-acr.sh -n enrichmentapp -t $tag -f $DIR/../artifacts/enrichmentapp
-$DIR/../scripts/push-to-acr.sh -n enrichmentapp -t $latest -f $DIR/../artifacts/enrichmentapp
 
 echo "Updating the enrichment webapp with the new image"
 az webapp config container set --name $ENRICHMENT_APPSERVICE_NAME --resource-group $RESOURCE_GROUP_NAME --container-image-name ${CONTAINER_REGISTRY}/enrichmentapp:$tag --container-registry-url "https://${CONTAINER_REGISTRY}" --container-registry-user $CONTAINER_REGISTRY_USERNAME --container-registry-password $CONTAINER_REGISTRY_PASSWORD --enable-app-service-storage false
