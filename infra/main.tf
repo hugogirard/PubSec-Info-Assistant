@@ -15,6 +15,7 @@ resource "random_string" "random" {
   special = false
   upper   = false
   number  = false
+  Default = "jjnqkr"
 }
 
 module "entraObjects" {
