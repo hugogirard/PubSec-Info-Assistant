@@ -1,9 +1,14 @@
+variable "subscription_id" {
+  description = "The Azure subscription ID"
+  type = string
+}
+
 // Bring your own vnet section
 variable "openai_region" {
   description = "The region where the OpenAI service is deployed"
   type        = string
 }
-
+ 
 variable "bring_your_own_vnet" {
   description = "Flag to indicate if the user is bringing their own vnet"
   type        = bool
@@ -21,6 +26,11 @@ variable "vnet_name" {
 
 variable "dns_subnet_name" {
   description = "Name of the subnet for the DNS Resolver"
+  type        = string
+}
+
+variable "private_endpoints_subnet_name" {
+  description = "Name of the subnet for the Povate Endpoints"
   type        = string
 }
 

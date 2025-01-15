@@ -1,0 +1,53 @@
+trigger: none
+
+pool: 
+  name: assist-pool
+
+stages:
+
+- stage: TF_Plan
+  displayName: TF Plan
+  jobs:
+  - job: TF_Plan
+    displayName: 'Plan'
+    steps:
+      - task: AzureCLI@2
+        displayName: TF plan
+        inputs:
+          azureSubscription: managed_identity
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          addSpnToEnvironment: true
+          inlineScript: |
+            export ARM_CLIENT_ID="$servicePrincipalId"
+            export ARM_TENANT_ID="$tenantId"
+            export ARM_OIDC_TOKEN="$idToken"
+            export ARM_USE_OIDC="true"
+            export ARM_SUBSCRIPTION_ID="$subscriptionId"
+            terraform init
+            terraform plan 
+          workingDirectory: $(System.DefaultWorkingDirectory)/infra
+
+- stage: TF_Apply
+  displayName: Deploy Infrastructure
+  jobs:
+  - job: TF_Apply
+    displayName: 'Apply'
+    steps:
+      - task: AzureCLI@2
+        displayName: Deploy TF
+        inputs:
+          azureSubscription: managed_identity
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          addSpnToEnvironment: true
+          inlineScript: |
+            export ARM_CLIENT_ID="$servicePrincipalId"
+            export ARM_TENANT_ID="$tenantId"
+            export ARM_OIDC_TOKEN="$idToken"
+            export ARM_USE_OIDC="true"
+            export ARM_SUBSCRIPTION_ID="$subscriptionId"
+            terraform init
+            terraform apply -auto-approve 
+          workingDirectory: $(System.DefaultWorkingDirectory)/infra
+          
