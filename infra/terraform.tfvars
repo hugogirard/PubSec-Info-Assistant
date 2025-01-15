@@ -16,6 +16,7 @@ useExistingAOAIService=false
 azureOpenAIServiceName="assist-openai-22344"
 azureOpenAIResourceGroup="assist-rg-spoke"
 kv_secret_expiration=30
+subscription_id="10ed633a-77ef-4d3d-96d9-156f41cecfb4"
 
 
 arm_template_schema_mgmt_api="https://schema.management.azure.com"
