@@ -5,7 +5,7 @@
 
 
 # Variables
-resourceGroup="rg-spoke"
+resourceGroup="assist-rg-spoke"
 vnetName="vnet-ai-spoke"
 vnetAddressPrefix="10.1.0.0/16"
 subnet1Name="snet-web"
@@ -20,7 +20,7 @@ subnet5Name="snet-openai"
 subnet5AddressPrefix="10.1.0.128/27"
 
 # Create resource group
-#az group create --name $resourceGroup --location eastus
+az group create --name $resourceGroup --location eastus
 
 # Create virtual network
 az network vnet create --name $vnetName --resource-group $resourceGroup --address-prefix $vnetAddressPrefix
@@ -46,15 +46,15 @@ az network vnet subnet update --name $subnet3Name --resource-group $resourceGrou
 az network vnet subnet update --name $subnet4Name --resource-group $resourceGroup --vnet-name $vnetName --network-security-group NSG-$subnet4Name
 az network vnet subnet update --name $subnet5Name --resource-group $resourceGroup --vnet-name $vnetName --network-security-group NSG-$subnet5Name
 
-# List all private DNS zones in the resource group rg-hub
-dnsZones=$(az network private-dns zone list --resource-group rg-hub --query "[].name" --output tsv)
+# # List all private DNS zones in the resource group rg-hub
+#         dnsZones=$(az network private-dns zone list --resource-group rg-hub --query "[].name" --output tsv)
 
 # Loop through each DNS zone and create a link to the virtual network
-for dnsZone in $dnsZones; do
-  az network private-dns link vnet create \
-    --resource-group rg-hub \
-    --zone-name $dnsZone \
-    --name LinkToVnetAiSpoke \
-    --virtual-network /subscriptions/6e37307e-394c-478a-8404-4e441b3dfc1d/resourceGroups/rg-spoke/providers/Microsoft.Network/virtualNetworks/vnet-ai-spoke \
-    --registration-enabled false
-done
+# for dnsZone in $dnsZones; do
+#   az network private-dns link vnet create \
+#     --resource-group rg-hub \
+#     --zone-name $dnsZone \
+#     --name LinkToVnetAiSpoke \
+#     --virtual-network /subscriptions/6e37307e-394c-478a-8404-4e441b3dfc1d/resourceGroups/rg-spoke/providers/Microsoft.Network/virtualNetworks/vnet-ai-spoke \
+#     --registration-enabled false
+# done

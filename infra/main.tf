@@ -14,8 +14,8 @@ resource "random_string" "random" {
   length  = 6
   special = false
   upper   = false
-  number  = false
-  Default = "jjnqkr"
+  # number  = false
+  # Default = "jjnqkr"
 }
 
 module "entraObjects" {
@@ -179,7 +179,7 @@ module "enrichmentApp" {
   container_registry_id               = module.acr.acr_id
   is_secure_mode                      = true
   subnetIntegration_id                = data.azurerm_subnet.integration_subnet.id
-  subnet_name                         = var.web_subnet_name
+  subnet_name                         = var.subnet_service_name
   vnet_name                           = var.vnet_name
   private_dns_zone_ids                = null
   azure_environment                   = var.azure_environment
@@ -241,7 +241,7 @@ module "webapp" {
   keyVaultName                        = module.kvModule.keyVaultName
   tenantId                            = data.azurerm_client_config.current.tenant_id
   is_secure_mode                      = true
-  subnet_name                         = var.web_subnet_name
+  subnet_name                         = var.subnet_service_name
   vnet_name                           = var.vnet_name
   snetIntegration_id                  = data.azurerm_subnet.integration_subnet.id
   private_dns_zone_ids                = null
@@ -367,7 +367,7 @@ module "functions" {
   logAnalyticsWorkspaceResourceId       = module.logging.logAnalyticsId
   is_secure_mode                        = true
   vnet_name                             = var.vnet_name
-  subnet_name                           = var.web_subnet_name
+  subnet_name                           = var.subnet_service_name
   subnetIntegration_id                  = data.azurerm_subnet.integration_subnet.id
   private_dns_zone_ids                  = null
   container_registry                    = module.acr.login_server
